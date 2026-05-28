@@ -82,5 +82,6 @@
   "What language do you want to learn?": "¿Qué idioma quieres aprender?",
   "Life Steal": "Robo de vida",
   "Each correct answer has a {{base}}% chance of restoring +1 energy, plus an additional +{{inc}}% chance per upgrade.": "Cada respuesta correcta tiene un {{base}}% de posibilidades de restaurar +1 de energía, más un +{{inc}}% adicional de posibilidades por mejora.",
-  "{{x}}% chance of +1 energy on correct answer": "{{x}}% de posibilidades de +1 de energía en respuesta correcta"
+  "{{x}}% chance of +1 energy on correct answer": "{{x}}% de posibilidades de +1 de energía en respuesta correcta",
+  "Energy gained:": "Energía ganada:"
 }

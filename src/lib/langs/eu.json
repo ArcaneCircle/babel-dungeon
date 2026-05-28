@@ -82,5 +82,6 @@
   "What language do you want to learn?": "Zein hizkuntza ikasi nahi duzu?",
   "Life Steal": "Bizitza lapurreta",
   "Each correct answer has a {{base}}% chance of restoring +1 energy, plus an additional +{{inc}}% chance per upgrade.": "Erantzun zuzen bakoitzak {{base}}ko % aukera du +1 energia berreskuratzeko, eta +{{inc}}% gehigarri hobekuntza bakoitzeko.",
-  "{{x}}% chance of +1 energy on correct answer": "{{x}}ko % aukera erantzun zuzenean +1 energia lortzeko"
+  "{{x}}% chance of +1 energy on correct answer": "{{x}}ko % aukera erantzun zuzenean +1 energia lortzeko",
+  "Energy gained:": "Lortutako energia:"
 }

@@ -72,6 +72,7 @@ const pendingMonsterUpdates: Array<{
   monster: Monster;
   sessionId: number;
   xp: number;
+  energyGained: number;
 }> = [];
 
 // Initialize SENTENCES based on learning language
@@ -258,6 +259,7 @@ function getResultsModal(
     type: "results",
     time: endTime - session.start,
     xp: session.xp,
+    energyGained: session.energyGained || 0,
     accuracy: Math.round((correct / total) * 100),
     next,
   };
@@ -320,12 +322,15 @@ export function sendMonsterUpdate(
   }
 
   const session = getSession()!;
-  for (const { monster, xp } of pendingMonsterUpdates) {
+  for (const { monster, xp, energyGained } of pendingMonsterUpdates) {
     updateMonster(monster, session);
     session.xp += xp;
+    session.energyGained = (session.energyGained || 0) + energyGained;
   }
   updateMonster(monster, session);
   session.xp += xp;
+  const currentEnergyGained = correct > 0 ? rollLifeSteal() : 0;
+  session.energyGained = (session.energyGained || 0) + currentEnergyGained;
   if (!session.pending.length && !session.failed.length) {
     // session finished, clear pending updates queue,
     // session contains updated state
@@ -357,6 +362,7 @@ export function sendMonsterUpdate(
       monster,
       sessionId: session.start,
       xp,
+      energyGained: currentEnergyGained,
     });
     setSessionState(session);
   }
@@ -447,6 +453,13 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         }
         setXp(xp);
         setLevel(level);
+
+        if (session.energyGained) {
+          const { energy, time } = getEnergy();
+          const maxEnergy = getMaxEnergy(getMaxEnergySkillLevel());
+          const newEnergy = Math.min(energy + session.energyGained, maxEnergy);
+          if (newEnergy > energy) setEnergy(newEnergy, time);
+        }
 
         const date = new Date(session.correct[session.correct.length - 1].seen);
         const newPlayed = date.setHours(0, 0, 0, 0);
@@ -539,6 +552,7 @@ async function createNewSession(
     start,
     mode,
     xp: 0,
+    energyGained: 0,
     failedIds: [],
     correct: [],
     failed: [],
@@ -656,14 +670,9 @@ export function getLifeStealChance(level: number): number {
     : 0;
 }
 
-export async function tryLifeSteal(lifeStealLevel: number): Promise<void> {
-  if (!lifeStealLevel) return;
+function rollLifeSteal(): number {
+  const lifeStealLevel = getLifeStealSkillLevel();
+  if (!lifeStealLevel) return 0;
   const chance = getLifeStealChance(lifeStealLevel);
-  if (Math.random() * 100 >= chance) return;
-  const { energy, time } = getEnergy();
-  const maxEnergy = getMaxEnergy(getMaxEnergySkillLevel());
-  if (energy < maxEnergy) {
-    setEnergy(energy + 1, time);
-    if (setPlayerState) setPlayerState(await getPlayer());
-  }
+  return Math.random() * 100 < chance ? 1 : 0;
 }

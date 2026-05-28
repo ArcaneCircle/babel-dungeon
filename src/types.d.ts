@@ -62,6 +62,7 @@ declare interface Session {
   start: number;
   mode: GameMode;
   xp: number;
+  energyGained: number;
   failedIds: number[];
   correct: Monster[];
   failed: Monster[];
@@ -129,6 +130,7 @@ declare type ModalPayload =
       type: "results";
       time: number;
       xp: number;
+      energyGained: number;
       accuracy: number;
       next: ModalPayload | null;
     };
