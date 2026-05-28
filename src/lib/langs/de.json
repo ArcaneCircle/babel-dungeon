@@ -80,7 +80,7 @@
   "New Game": "Neues Spiel",
   "Import Game": "Spiel importieren",
   "What language do you want to learn?": "Welche Sprache möchtest Du lernen?",
-  "Life Steal": "Life Steal",
-  "Each correct answer has a {{base}}% chance of restoring +1 energy, plus an additional +{{inc}}% chance per upgrade.": "Each correct answer has a {{base}}% chance of restoring +1 energy, plus an additional +{{inc}}% chance per upgrade.",
-  "{{x}}% chance of +1 energy on correct answer": "{{x}}% chance of +1 energy on correct answer"
+  "Life Steal": "Lebensraub",
+  "Each correct answer has a {{base}}% chance of restoring +1 energy, plus an additional +{{inc}}% chance per upgrade.": "Jede richtige Antwort hat eine {{base}}%-Chance, +1 Energie wiederherzustellen, plus eine zusätzliche +{{inc}}%-Chance pro Aufwertung.",
+  "{{x}}% chance of +1 energy on correct answer": "{{x}}% Chance auf +1 Energie bei richtiger Antwort"
 }
