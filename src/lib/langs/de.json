@@ -9,9 +9,7 @@
   "Russian": "Russisch",
   "Japanese": "Japanisch",
   "Basque": "Baskisch",
-
   "Continue": "Weiter",
-
   "MAX": "MAX",
   "xp": "xp",
   "LEVEL": "LEVEL",
@@ -27,13 +25,11 @@
   "Easy": "Leicht",
   "Normal": "Normal",
   "Cancel": "Abbrechen",
-
   "+{{x}}xp": "+{{x}}xp",
   "lvl.{{l}}": "lvl.{{l}}",
   "NEW": "NEU",
   "Did you know it?": "Wusstest Du es?",
   "Reveal": "Aufdecken",
-
   "CREDITS": "DANKSAGUNG",
   "Developer: Asiel Diaz Benitez (adb)": "Entwickler: Asiel Diaz Benitez (adb)",
   "Sentences collection: tatoeba.org": "Sätze: tatoeba.org",
@@ -41,12 +37,10 @@
   "Sound effects by celestialghost8, Fupi and Dizzy Crow": "Soundeffekte von celestialghost8, Fupi und Dizzy Crow",
   "Translators: adb, sbkaf, mikelgs": "Übersetzung: adb, sbkaf, mikelgs",
   "Learn more...": "Mehr erfahren...",
-
   "You Leveled Up!": "Du erhältst das nächste Level!",
   "Now at level": "Jetzt bei Level",
   "Skill Points: +{{x}}": "Fähigkeitspunkte: +{{x}}",
   "Energy restored: +{{x}}": "Energie wiederhergestellt: +{{x}}",
-
   "SKILLS": "FÄHIGKEITEN",
   "Spend skill points to upgrade your passive abilities.": "Gib Fertigkeitspunkte aus, um deine passiven Fähigkeiten zu verbessern.",
   "Skill Points: {{x}}": "Fähigkeitspunkte: {{x}}",
@@ -67,16 +61,13 @@
   "Golden Touch": "Goldene Berührung",
   "Pressing the golden button increases the monster's level more than usual, +1 level per upgrade.": "Das Drücken des goldenen Knopfes erhöht die Stufe des Monsters stärker als üblich: +1 Stufe pro Upgrade.",
   "Monster's level increased by +{{x}} when the golden button is used": "Die Stufe des Monsters erhöht sich um +{{x}}, wenn der goldene Knopf verwendet wird",
-
   "LOW ENERGY!": "NIEDRIGE ENERGIE",
   "Your energy is too low.": "Deine Energie ist zu niedrig.",
   "You will recover energy over time. Take a break and come back later!": "Deine bekommst Energie mit der Zeit. Nimm Dir eine Pause und komme später wieder!",
-
   "ROUND COMPLETED!": "RUNDE ABGESCHLOSSEN",
   "Total XP:": "Gesamt XP:",
   "Accuracy:": "Genauigkeit:",
   "Time:": "Zeit:",
-
   "SETTINGS": "Einstellungen",
   "SFX": "Effekte",
   "TTS": "Sprachausgabe",
@@ -84,11 +75,12 @@
   "Credits": "Danksagung",
   "[ ON]": "[ AN]",
   "[OFF]": "[AUS]",
-
   "ERROR": "FEHLER",
   "Can't import backup, it is not compatible with your version of the game": "Backup kann nicht importiert werden. Es ist nicht kompatibel mit Deiner Version des Spiels",
-
   "New Game": "Neues Spiel",
   "Import Game": "Spiel importieren",
-  "What language do you want to learn?": "Welche Sprache möchtest Du lernen?"
+  "What language do you want to learn?": "Welche Sprache möchtest Du lernen?",
+  "Life Steal": "Life Steal",
+  "Each correct answer has a {{base}}% chance of restoring +1 energy, plus an additional +{{inc}}% chance per upgrade.": "Each correct answer has a {{base}}% chance of restoring +1 energy, plus an additional +{{inc}}% chance per upgrade.",
+  "{{x}}% chance of +1 energy on correct answer": "{{x}}% chance of +1 energy on correct answer"
 }

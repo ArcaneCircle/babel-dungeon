@@ -24,6 +24,8 @@ import {
   setBerserkerSkillLevel,
   getGoldenTouchSkillLevel,
   setGoldenTouchSkillLevel,
+  getLifeStealSkillLevel,
+  setLifeStealSkillLevel,
   getLastPlayed,
   setLastPlayed,
   getStudiedToday,
@@ -48,6 +50,9 @@ export const MOTIVATED_SKILL_PER_LEVEL_PERCENT = 1;
 export const MOTIVATED_SKILL_MAX_LEVEL = 50;
 export const BERSERKER_SKILL_MAX_LEVEL = 50;
 export const GOLDEN_TOUCH_SKILL_MAX_LEVEL = 50;
+export const LIFE_STEAL_SKILL_MAX_LEVEL = 20;
+export const LIFE_STEAL_BASE_CHANCE = 5;
+export const LIFE_STEAL_CHANCE_PER_LEVEL = 0.5;
 
 const MONSTER_UPDATE_CMD = "mon-up",
   INIT_CMD = "init",
@@ -152,6 +157,7 @@ export async function getPlayer(): Promise<Player> {
       maxEnergy: getMaxEnergySkillLevel(),
       berserker: getBerserkerSkillLevel(),
       goldenTouch: getGoldenTouchSkillLevel(),
+      lifeSteal: getLifeStealSkillLevel(),
     },
     streak,
     studiedToday,
@@ -218,6 +224,7 @@ export async function upgradeSkill(
   const maxEnergySkill = getMaxEnergySkillLevel();
   const berserkerSkill = getBerserkerSkillLevel();
   const goldenTouchSkill = getGoldenTouchSkillLevel();
+  const lifeStealSkill = getLifeStealSkillLevel();
 
   const uid = window.webxdc.selfAddr;
   window.webxdc.sendUpdate(
@@ -232,6 +239,7 @@ export async function upgradeSkill(
         berserker: skill === "berserker" ? berserkerSkill + 1 : berserkerSkill,
         goldenTouch:
           skill === "goldenTouch" ? goldenTouchSkill + 1 : goldenTouchSkill,
+        lifeSteal: skill === "lifeSteal" ? lifeStealSkill + 1 : lifeStealSkill,
       },
     },
     "",
@@ -470,6 +478,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         setMaxEnergySkillLevel(payload.maxEnergy);
         setBerserkerSkillLevel(payload.berserker);
         setGoldenTouchSkillLevel(payload.goldenTouch);
+        setLifeStealSkillLevel(payload.lifeSteal);
         if (setPlayerState) setPlayerState(await getPlayer());
         break;
       }
@@ -639,4 +648,22 @@ function toNextLevelMediumFast(level: number): number {
 
 function getMaxEnergy(level: number): number {
   return BASE_MAX_ENERGY + level;
+}
+
+export function getLifeStealChance(level: number): number {
+  return level
+    ? LIFE_STEAL_BASE_CHANCE + level * LIFE_STEAL_CHANCE_PER_LEVEL
+    : 0;
+}
+
+export async function tryLifeSteal(lifeStealLevel: number): Promise<void> {
+  if (!lifeStealLevel) return;
+  const chance = getLifeStealChance(lifeStealLevel);
+  if (Math.random() * 100 >= chance) return;
+  const { energy, time } = getEnergy();
+  const maxEnergy = getMaxEnergy(getMaxEnergySkillLevel());
+  if (energy < maxEnergy) {
+    setEnergy(energy + 1, time);
+    if (setPlayerState) setPlayerState(await getPlayer());
+  }
 }

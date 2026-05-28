@@ -11,6 +11,7 @@ import {
   MASTERED_STREAK,
   getCard,
   sendMonsterUpdate,
+  tryLifeSteal,
 } from "~/lib/game";
 import { tts } from "~/lib/tts";
 import { MAIN_COLOR, RED, GOLDEN, BG_PRIMARY, TEXT_PRIMARY } from "~/lib/theme";
@@ -100,26 +101,38 @@ function Quiz({
     if (sfxEnabled && !ttsWillSpeak) errorSfx.play();
     sendMonsterUpdate(monster, 0);
   }, [monster, ttsEnabled, sfxEnabled, defaultMode]);
+
+  const goldenTouch = player ? player.skills.goldenTouch : 0;
+  const lifeSteal = player ? player.skills.lifeSteal : 0;
   const onCorrect = useCallback(() => {
     const ttsWillSpeak = ttsEnabled && defaultMode;
     if (sfxEnabled && (!ttsWillSpeak || pendingCount === 1)) {
       successSfx.play();
     }
     const mod = sendMonsterUpdate(monster, 1);
+    tryLifeSteal(lifeSteal);
     setShowingResults(!!mod);
     setModal(mod);
-  }, [monster, ttsEnabled, sfxEnabled, defaultMode, pendingCount]);
+  }, [monster, ttsEnabled, sfxEnabled, defaultMode, pendingCount, lifeSteal]);
 
-  const goldenTouch = player ? player.skills.goldenTouch : 0;
   const onMastered = useCallback(() => {
     const ttsWillSpeak = ttsEnabled && defaultMode;
     if (sfxEnabled && (!ttsWillSpeak || pendingCount === 1)) {
       successSfx.play();
     }
     const mod = sendMonsterUpdate(monster, 5 + player.skills.goldenTouch);
+    tryLifeSteal(lifeSteal);
     setShowingResults(!!mod);
     setModal(mod);
-  }, [monster, ttsEnabled, sfxEnabled, defaultMode, pendingCount, goldenTouch]);
+  }, [
+    monster,
+    ttsEnabled,
+    sfxEnabled,
+    defaultMode,
+    pendingCount,
+    goldenTouch,
+    lifeSteal,
+  ]);
 
   const onShow = useCallback(() => {
     if (ttsEnabled && !defaultMode) {

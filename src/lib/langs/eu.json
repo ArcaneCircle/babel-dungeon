@@ -9,9 +9,7 @@
   "Russian": "Errusiera",
   "Japanese": "Japoniera",
   "Basque": "Euskara",
-
   "Continue": "Jarraitu",
-
   "MAX": "MAX",
   "xp": "xp",
   "LEVEL": "MAILA",
@@ -27,13 +25,11 @@
   "Easy": "Erraza",
   "Normal": "Normala",
   "Cancel": "Bertan behera utzi",
-
   "+{{x}}xp": "+{{x}}xp",
   "lvl.{{l}}": "lvl.{{l}}",
   "NEW": "BERRIA",
   "Did you know it?": "Bazenekien?",
   "Reveal": "Erakutsi",
-
   "CREDITS": "KREDITUAK",
   "Developer: Asiel Diaz Benitez (adb)": "Garatzailea: Asiel Diaz Benitez (adb)",
   "Sentences collection: tatoeba.org": "Esaldi bilduma: tatoeba.org",
@@ -41,12 +37,10 @@
   "Sound effects by celestialghost8, Fupi and Dizzy Crow": "Soinu efektuak: celestialghost8, Fupi eta Dizzy Crow",
   "Translators: adb, sbkaf, mikelgs": "Itzultzaileak: adb, sbkaf, mikelgs",
   "Learn more...": "Info gehiago...",
-
   "You Leveled Up!": "Mailaz igo zara!",
   "Now at level": "Oraingo maila",
   "Skill Points: +{{x}}": "Trebetasun puntuak: +{{x}}",
   "Energy restored: +{{x}}": "Energia berreskuratua: +{{x}}",
-
   "SKILLS": "TREBETASUNAK",
   "Spend skill points to upgrade your passive abilities.": "Gastatu trebetasun puntuak zure gaitasun pasiboak hobetzeko.",
   "Skill Points: {{x}}": "Trebetasun puntuak: {{x}}",
@@ -67,16 +61,13 @@
   "Golden Touch": "Urrezko Ukitua",
   "Pressing the golden button increases the monster's level more than usual, +1 level per upgrade.": "Urrezko botoia sakatzean munstroaren maila ohi baino gehiago igotzen da, +1 maila hobekuntza bakoitzeko.",
   "Monster's level increased by +{{x}} when the golden button is used": "Munstroaren maila +{{x}} handitzen da urrezko botoia erabiltzean",
-
   "LOW ENERGY!": "ENERGIA GUTXIEGI!",
   "Your energy is too low.": "Energia gutxiegi duzu.",
   "You will recover energy over time. Take a break and come back later!": "Denborarekin indartuko zara berriro. Hartu atseden eta itzuli geroago!",
-
   "ROUND COMPLETED!": "ITZULIA BURUTUTA!",
   "Total XP:": "XP osoa:",
   "Accuracy:": "Zehaztasuna:",
   "Time:": "Denbora:",
-
   "SETTINGS": "EZARPENAK",
   "SFX": "SFX",
   "TTS": "TTS",
@@ -84,11 +75,12 @@
   "Credits": "Kredituak",
   "[ ON]": "[BAI]",
   "[OFF]": "[EZ]",
-
   "ERROR": "ERROREA",
   "Can't import backup, it is not compatible with your version of the game": "Ezin da babeskopia inportatu; ez da bateragarria jolas bertsio honekin",
-
   "New Game": "Partida berria",
   "Import Game": "Inportatu partida",
-  "What language do you want to learn?": "Zein hizkuntza ikasi nahi duzu?"
+  "What language do you want to learn?": "Zein hizkuntza ikasi nahi duzu?",
+  "Life Steal": "Life Steal",
+  "Each correct answer has a {{base}}% chance of restoring +1 energy, plus an additional +{{inc}}% chance per upgrade.": "Each correct answer has a {{base}}% chance of restoring +1 energy, plus an additional +{{inc}}% chance per upgrade.",
+  "{{x}}% chance of +1 energy on correct answer": "{{x}}% chance of +1 energy on correct answer"
 }
