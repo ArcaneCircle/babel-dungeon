@@ -1,9 +1,12 @@
 import { MAIN_COLOR, RED } from "~/lib/theme";
 import { _ } from "~/lib/i18n";
 import { formatTime } from "~/lib/dateutil";
+import type { CSSProperties } from "react";
 
 import ConfirmModal from "./ConfirmModal";
 import styles from "./ResultsModal.module.css";
+
+const CHEST_BEAM_COUNT = 7;
 
 type Props = {
   time: number;
@@ -39,7 +42,19 @@ export default function ResultsModal({
           {onFireXp > 0 && (
             <>
               <div className={styles.chestContainer}>
-                <div aria-hidden className={styles.chestFlare} />
+                <div aria-hidden className={styles.chestFlare}>
+                  {Array.from({ length: CHEST_BEAM_COUNT }).map((_, i) => (
+                    <span
+                      key={i}
+                      className={styles.chestFlareBeam}
+                      style={
+                        {
+                          "--beam-rotation": `${(360 / CHEST_BEAM_COUNT) * i}deg`,
+                        } as CSSProperties
+                      }
+                    />
+                  ))}
+                </div>
                 <img
                   src={"/chest.png"}
                   aria-hidden

@@ -8,17 +8,28 @@
 
 .chestFlare {
   position: absolute;
-  inset: -0.6em;
-  border-radius: 50%;
-  background: repeating-conic-gradient(
-    from 0deg,
-    rgba(255, 240, 140, 0.56) 0deg 10deg,
-    rgba(255, 220, 100, 0.1) 10deg 24deg
+  inset: -1.2em;
+  animation: chestFlareRotate 10s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.chestFlareBeam {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2em;
+  height: 4.5em;
+  transform-origin: 50% 100%;
+  transform: translate(-50%, -100%) rotate(var(--beam-rotation));
+  clip-path: polygon(50% 100%, 100% 0, 0 0);
+  background: linear-gradient(
+    to top,
+    rgba(255, 236, 130, 0.62) 0%,
+    rgba(255, 224, 100, 0.3) 58%,
+    rgba(255, 220, 100, 0) 100%
   );
   filter: blur(0.08em);
-  transform-origin: center;
-  animation: chestFlareRotate 10s linear infinite;
-  opacity: 0.85;
 }
 
 .chestImage {
