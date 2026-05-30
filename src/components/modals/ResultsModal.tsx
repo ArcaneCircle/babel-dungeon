@@ -3,6 +3,7 @@ import { _ } from "~/lib/i18n";
 import { formatTime } from "~/lib/dateutil";
 
 import ConfirmModal from "./ConfirmModal";
+import styles from "./ResultsModal.module.css";
 
 type Props = {
   time: number;
@@ -37,38 +38,12 @@ export default function ResultsModal({
         <div style={{ textAlign: "center" }}>
           {onFireXp > 0 && (
             <>
-              <div
-                style={{
-                  position: "relative",
-                  width: "5em",
-                  height: "5em",
-                  margin: "0 auto",
-                  padding: "0 0.2em",
-                }}
-              >
-                <div
-                  aria-hidden
-                  style={{
-                    position: "absolute",
-                    inset: "-0.6em",
-                    borderRadius: "50%",
-                    background:
-                      "repeating-conic-gradient(from 0deg, rgba(255, 240, 140, 0.56) 0deg 10deg, rgba(255, 220, 100, 0.1) 10deg 24deg)",
-                    filter: "blur(0.08em)",
-                    transformOrigin: "center",
-                    animation: "chestFlareRotate 10s linear infinite",
-                    opacity: 0.85,
-                  }}
-                />
+              <div className={styles.chestContainer}>
+                <div aria-hidden className={styles.chestFlare} />
                 <img
                   src={"/chest.png"}
                   aria-hidden
-                  style={{
-                    position: "relative",
-                    zIndex: 1,
-                    width: "5em",
-                    height: "5em",
-                  }}
+                  className={styles.chestImage}
                 />
               </div>
               <div style={{ marginTop: "0.5em" }}>
@@ -94,18 +69,6 @@ export default function ResultsModal({
           </div>
         </div>
       </div>
-      <style>
-        {`
-          @keyframes chestFlareRotate {
-            from {
-              transform: rotate(0deg);
-            }
-            to {
-              transform: rotate(360deg);
-            }
-          }
-        `}
-      </style>
     </ConfirmModal>
   );
 }
