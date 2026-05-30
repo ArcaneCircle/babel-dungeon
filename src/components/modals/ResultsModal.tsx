@@ -37,15 +37,40 @@ export default function ResultsModal({
         <div style={{ textAlign: "center" }}>
           {onFireXp > 0 && (
             <>
-              <img
-                src={"/chest.png"}
-                aria-hidden
+              <div
                 style={{
+                  position: "relative",
                   width: "5em",
                   height: "5em",
+                  margin: "0 auto",
                   padding: "0 0.2em",
                 }}
-              />
+              >
+                <div
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    inset: "-0.6em",
+                    borderRadius: "50%",
+                    background:
+                      "repeating-conic-gradient(from 0deg, rgba(255, 240, 140, 0.56) 0deg 10deg, rgba(255, 220, 100, 0.1) 10deg 24deg)",
+                    filter: "blur(0.08em)",
+                    transformOrigin: "center",
+                    animation: "chestFlareRotate 10s linear infinite",
+                    opacity: 0.85,
+                  }}
+                />
+                <img
+                  src={"/chest.png"}
+                  aria-hidden
+                  style={{
+                    position: "relative",
+                    zIndex: 1,
+                    width: "5em",
+                    height: "5em",
+                  }}
+                />
+              </div>
               <div style={{ marginTop: "0.5em" }}>
                 {_("+{{x}}xp").replace("{{x}}", String(onFireXp))}
               </div>
@@ -69,6 +94,18 @@ export default function ResultsModal({
           </div>
         </div>
       </div>
+      <style>
+        {`
+          @keyframes chestFlareRotate {
+            from {
+              transform: rotate(0deg);
+            }
+            to {
+              transform: rotate(360deg);
+            }
+          }
+        `}
+      </style>
     </ConfirmModal>
   );
 }
