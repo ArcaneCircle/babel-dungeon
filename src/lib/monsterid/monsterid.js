@@ -362,121 +362,17 @@ function renderFrame(
   return canvas.toDataURL("image/png");
 }
 
-function drawFallbackSprite(context, appearance, bob) {
-  const {
-    palette,
-    hornType,
-    earHeight,
-    armSpan,
-    eyeOffset,
-    mouthType,
-    bodyWidth,
-  } = appearance;
-
-  context.clearRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
-  context.fillStyle = palette.shadow;
-
-  for (let y = 4 + bob; y <= 17 + bob; y += 1) {
-    const inset = y < 7 + bob ? 3 : y > 14 + bob ? 2 : 1;
-    context.fillRect(inset, y, FRAME_WIDTH - inset * 2, 1);
-  }
-
-  context.clearRect(3, 6 + bob, FRAME_WIDTH - 6, 10);
-  context.fillStyle = palette.body;
-
-  for (let y = 5 + bob; y <= 16 + bob; y += 1) {
-    const inset = y < 7 + bob ? bodyWidth : y > 14 + bob ? 3 : 2;
-    context.fillRect(inset, y, FRAME_WIDTH - inset * 2, 1);
-  }
-
-  context.fillStyle = palette.accent;
-  if (hornType === 0) {
-    context.fillRect(3, 3 + bob, 2, 2);
-    context.fillRect(11, 3 + bob, 2, 2);
-  } else if (hornType === 1) {
-    context.fillRect(2, 3 + bob, 2, 3);
-    context.fillRect(12, 3 + bob, 2, 3);
-  } else {
-    context.fillRect(4, 2 + bob, 1, 3);
-    context.fillRect(11, 2 + bob, 1, 3);
-  }
-
-  context.fillRect(3, 5 + bob - earHeight, 1, earHeight + 1);
-  context.fillRect(12, 5 + bob - earHeight, 1, earHeight + 1);
-  context.fillRect(2 - armSpan, 10 + bob, 2 + armSpan, 3);
-  context.fillRect(12, 10 + bob, 2 + armSpan, 3);
-
-  context.fillStyle = palette.eyes;
-  context.fillRect(5 - eyeOffset, 9 + bob, 2, 2);
-  context.fillRect(9 + eyeOffset, 9 + bob, 2, 2);
-
-  context.fillStyle = palette.shadow;
-  if (mouthType === 0) {
-    context.fillRect(6, 13 + bob, 4, 1);
-  } else if (mouthType === 1) {
-    context.fillRect(6, 13 + bob, 1, 1);
-    context.fillRect(9, 13 + bob, 1, 1);
-    context.fillRect(7, 14 + bob, 2, 1);
-  } else {
-    context.fillRect(6, 13 + bob, 4, 2);
-    context.fillStyle = palette.accent;
-    context.fillRect(7, 14 + bob, 2, 1);
-  }
-
-  context.fillStyle = palette.shadow;
-  context.fillRect(4, 18 + bob, 3, 3);
-  context.fillRect(9, 18 + bob, 3, 3);
-  context.fillRect(6, 17 + bob, 4, 1);
-}
-
-function createFallbackAppearance(seed) {
-  const rng = createRng(md5(`fallback:${seed}`));
-  const palettes = [
-    { body: "#d96a4c", shadow: "#6e2b25", accent: "#f7cc5c", eyes: "#ffffff" },
-    { body: "#6fbf73", shadow: "#24593a", accent: "#d9f06b", eyes: "#0f1a20" },
-    { body: "#7f8df0", shadow: "#2f356f", accent: "#f6a8ff", eyes: "#ffffff" },
-    { body: "#8bc6d9", shadow: "#30556a", accent: "#f2e7a8", eyes: "#13232b" },
-    { body: "#d98bb3", shadow: "#6b2f4d", accent: "#f6d05a", eyes: "#1a1417" },
-  ];
-
-  return {
-    palette: palettes[Math.floor(rng() * palettes.length)],
-    hornType: Math.floor(rng() * 3),
-    earHeight: Math.floor(rng() * 3),
-    armSpan: Math.floor(rng() * 2),
-    eyeOffset: Math.floor(rng() * 2),
-    mouthType: Math.floor(rng() * 3),
-    bodyWidth: 2 + Math.floor(rng() * 2),
-  };
-}
-
-function renderFallbackFrames(seed, width, height) {
-  const sprite = createCanvas(FRAME_WIDTH, FRAME_HEIGHT);
-  const spriteContext = getContext(sprite);
-  const appearance = createFallbackAppearance(seed);
-  const bobs = [0, 1, 0, 1];
-
-  return bobs.map((bob) => {
-    drawFallbackSprite(spriteContext, appearance, bob);
-    return renderFrame(sprite, 0, width, height, 0);
-  });
-}
-
 async function generateAvatarFrames(seed, width, height) {
-  try {
-    const [baseImage, partsImage] = await Promise.all([
-      loadImage(BASE_TEXTURE_SRC),
-      loadImage(PARTS_TEXTURE_SRC),
-    ]);
-    const appearance = createAppearance(seed);
-    const sourceCanvas = buildSourceCanvas(baseImage, partsImage, appearance);
+  const [baseImage, partsImage] = await Promise.all([
+    loadImage(BASE_TEXTURE_SRC),
+    loadImage(PARTS_TEXTURE_SRC),
+  ]);
+  const appearance = createAppearance(seed);
+  const sourceCanvas = buildSourceCanvas(baseImage, partsImage, appearance);
 
-    return Array.from({ length: IDLE_ANIMATION.len }, (_, frameIndex) =>
-      renderFrame(sourceCanvas, frameIndex, width, height),
-    );
-  } catch (_error) {
-    return renderFallbackFrames(seed, width, height);
-  }
+  return Array.from({ length: IDLE_ANIMATION.len }, (_, frameIndex) =>
+    renderFrame(sourceCanvas, frameIndex, width, height),
+  );
 }
 
 export const getAvatarFrames = function (string, width, height) {
