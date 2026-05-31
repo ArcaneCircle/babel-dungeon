@@ -261,10 +261,6 @@ function drawShape(context, frame, value, sheetRow, origins, partsImage) {
   }
 }
 
-function pad2(value) {
-  return `00${value.toString(16)}`.slice(-2);
-}
-
 function hexToArr(value) {
   return [
     parseInt(value.slice(0, 2), 16),
@@ -273,18 +269,30 @@ function hexToArr(value) {
   ];
 }
 
+const COLOR_CHANNEL_TOLERANCE = 2;
+const ALPHA_MATCH_MIN = 250;
+
+function matchesSourceColor(data, pixelIndex, source) {
+  return (
+    Math.abs(data[pixelIndex] - source[0]) <= COLOR_CHANNEL_TOLERANCE &&
+    Math.abs(data[pixelIndex + 1] - source[1]) <= COLOR_CHANNEL_TOLERANCE &&
+    Math.abs(data[pixelIndex + 2] - source[2]) <= COLOR_CHANNEL_TOLERANCE
+  );
+}
+
 function applyTheme(data, defaults, palette) {
+  const sourcePalette = defaults.map(hexToArr);
+  const targetPalette = palette.map(hexToArr);
+
   for (let colorIndex = 0; colorIndex < defaults.length; colorIndex += 1) {
-    const source = defaults[colorIndex];
-    const target = hexToArr(palette[colorIndex]);
+    const source = sourcePalette[colorIndex];
+    const target = targetPalette[colorIndex];
 
     for (let pixelIndex = 0; pixelIndex < data.length; pixelIndex += 4) {
-      const pixel =
-        pad2(data[pixelIndex]) +
-        pad2(data[pixelIndex + 1]) +
-        pad2(data[pixelIndex + 2]);
-
-      if (data[pixelIndex + 3] === 255 && pixel === source) {
+      if (
+        data[pixelIndex + 3] >= ALPHA_MATCH_MIN &&
+        matchesSourceColor(data, pixelIndex, source)
+      ) {
         data[pixelIndex] = target[0];
         data[pixelIndex + 1] = target[1];
         data[pixelIndex + 2] = target[2];
