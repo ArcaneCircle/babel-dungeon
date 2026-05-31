@@ -10,8 +10,7 @@ const PART_Y_OFFSET = 4;
 const IDLE_ANIMATION = { len: 4, y: 1 };
 const BASE_TEXTURE_SRC = "/base.png";
 const PARTS_TEXTURE_SRC = "/parts.png";
-const EMPTY_IMAGE =
-  "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
+const EMPTY_IMAGE = "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
 
 const SHAPE_OPTIONS = [
   { key: "face", sheetRow: 2, max: 25 },
@@ -190,16 +189,44 @@ function drawShape(context, frame, row, value, sheetRow, origins, partsImage) {
   if (value === 4 && sheetRow === 2) {
     if (row === 1) {
       if (row === 2 && frame === 2) {
-        draw16(context, frame * FRAME_WIDTH, row * FRAME_HEIGHT, partsImage, 4, 4);
+        draw16(
+          context,
+          frame * FRAME_WIDTH,
+          row * FRAME_HEIGHT,
+          partsImage,
+          4,
+          4,
+        );
         drewCustomPart = true;
       } else if (row === 1 && frame === 1) {
-        draw16(context, frame * FRAME_WIDTH, row * FRAME_HEIGHT + 1, partsImage, 4, 4);
+        draw16(
+          context,
+          frame * FRAME_WIDTH,
+          row * FRAME_HEIGHT + 1,
+          partsImage,
+          4,
+          4,
+        );
         drewCustomPart = true;
       } else if (row === 1 && frame === 2) {
-        draw16(context, frame * FRAME_WIDTH, row * FRAME_HEIGHT + 2, partsImage, 5, 4);
+        draw16(
+          context,
+          frame * FRAME_WIDTH,
+          row * FRAME_HEIGHT + 2,
+          partsImage,
+          5,
+          4,
+        );
         drewCustomPart = true;
       } else if (row === 1 && frame === 3) {
-        draw16(context, frame * FRAME_WIDTH, row * FRAME_HEIGHT + 1, partsImage, 4, 4);
+        draw16(
+          context,
+          frame * FRAME_WIDTH,
+          row * FRAME_HEIGHT + 1,
+          partsImage,
+          4,
+          4,
+        );
         drewCustomPart = true;
       }
     } else if (row === 3) {
@@ -245,7 +272,14 @@ function drawShape(context, frame, row, value, sheetRow, origins, partsImage) {
       );
       drewCustomPart = true;
     } else if (row === 3 && frame === 2) {
-      draw16(context, frame * FRAME_WIDTH, row * FRAME_HEIGHT + 2, partsImage, 8, 4);
+      draw16(
+        context,
+        frame * FRAME_WIDTH,
+        row * FRAME_HEIGHT + 2,
+        partsImage,
+        8,
+        4,
+      );
       drewCustomPart = true;
     } else if (row === 3 && (frame === 5 || frame === 3)) {
       draw16(
@@ -268,7 +302,14 @@ function drawShape(context, frame, row, value, sheetRow, origins, partsImage) {
       );
       drewCustomPart = true;
     } else if (row === 3 && frame === 1) {
-      draw16(context, frame * FRAME_WIDTH, row * FRAME_HEIGHT + 2, partsImage, 9, 4);
+      draw16(
+        context,
+        frame * FRAME_WIDTH,
+        row * FRAME_HEIGHT + 2,
+        partsImage,
+        9,
+        4,
+      );
       drewCustomPart = true;
     }
   } else if (value === 8 && sheetRow === 3) {
@@ -329,7 +370,7 @@ function drawShape(context, frame, row, value, sheetRow, origins, partsImage) {
 }
 
 function pad2(value) {
-  return (`00${value.toString(16)}`).slice(-2);
+  return `00${value.toString(16)}`.slice(-2);
 }
 
 function hexToArr(value) {
@@ -361,7 +402,12 @@ function applyTheme(data, defaults, palette) {
 }
 
 function recolorAll(context, appearance) {
-  const image = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
+  const image = context.getImageData(
+    0,
+    0,
+    context.canvas.width,
+    context.canvas.height,
+  );
   const { data } = image;
 
   COLOR_THEMES.forEach((theme) => {
@@ -428,8 +474,15 @@ function renderFrame(
 }
 
 function drawFallbackSprite(context, appearance, bob) {
-  const { palette, hornType, earHeight, armSpan, eyeOffset, mouthType, bodyWidth } =
-    appearance;
+  const {
+    palette,
+    hornType,
+    earHeight,
+    armSpan,
+    eyeOffset,
+    mouthType,
+    bodyWidth,
+  } = appearance;
 
   context.clearRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
   context.fillStyle = palette.shadow;

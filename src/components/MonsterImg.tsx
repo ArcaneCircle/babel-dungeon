@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 // @ts-ignore
 import { getAvatarFrames } from "~/lib/monsterid/monsterid";
 
-const EMPTY_IMAGE =
-  "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
+const EMPTY_IMAGE = "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
 
 interface Props {
   value: string;
