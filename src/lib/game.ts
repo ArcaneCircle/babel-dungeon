@@ -335,7 +335,7 @@ export function sendMonsterUpdate(
         });
       } else {
         skillEffects.push({
-          source: "normalAnswer",
+          source: "correctAnswer",
           stat: "xp",
           amount: xp,
         });
@@ -379,6 +379,11 @@ export function sendMonsterUpdate(
   } else {
     monster.streak = 0;
     monster.due = 0;
+    skillEffects.push({
+      source: "incorrectAnswer",
+      stat: "xp",
+      amount: 0,
+    });
   }
 
   const session = getSession()!;

@@ -100,7 +100,7 @@ declare interface PlayerSkills {
 }
 
 declare interface SkillEffectGain {
-  source: "criticalHit" | "normalAnswer" | "lifeSteal";
+  source: "criticalHit" | "correctAnswer" | "incorrectAnswer" | "lifeSteal";
   stat: "xp" | "energy";
   amount: number;
 }

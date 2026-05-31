@@ -86,7 +86,6 @@ function Quiz({
   const [processing, setProcessing] = useState(false);
   const [modal, setModal] = useState(null as ModalPayload | null);
   const [skillEffects, setSkillEffects] = useState([] as FloatingSkillEffect[]);
-  const [missEffects, setMissEffects] = useState([] as number[]);
 
   const defaultMode =
     session.mode === "easy" ||
@@ -103,17 +102,6 @@ function Quiz({
     }
   }, [monster, showingResults]);
 
-  const onFailed = useCallback(() => {
-    setProcessing(true);
-    setShow(false);
-    if (sfxEnabled) errorSfx.play();
-    setMissEffects((v) => [...v, Date.now() + Math.random()]);
-    sendMonsterUpdate(monster, 0);
-  }, [monster, sfxEnabled]);
-  const onMissEffectDone = useCallback(
-    (id: number) => setMissEffects((v) => v.filter((e) => e !== id)),
-    [],
-  );
   const onSkillEffectDone = useCallback(
     (id: number) =>
       setSkillEffects((value) => value.filter((effect) => effect.id !== id)),
@@ -129,6 +117,13 @@ function Quiz({
       })),
     ]);
   }, []);
+  const onFailed = useCallback(() => {
+    setProcessing(true);
+    setShow(false);
+    if (sfxEnabled) errorSfx.play();
+    const { skillEffects } = sendMonsterUpdate(monster, 0);
+    pushSkillEffects(skillEffects);
+  }, [monster, sfxEnabled, pushSkillEffects]);
   const onCorrect = useCallback(() => {
     setProcessing(true);
     if (sfxEnabled) successSfx.play();
@@ -239,35 +234,28 @@ function Quiz({
                     fontSize: `${effect.source === "criticalHit" ? 1.2 : 1.1}em`,
                     top: `${index * 1.1}em`,
                     color:
-                      effect.source === "criticalHit"
-                        ? BLUE
-                        : effect.stat === "energy"
-                          ? GOLDEN
-                          : undefined,
+                      effect.source === "incorrectAnswer"
+                        ? RED
+                        : effect.source === "criticalHit"
+                          ? BLUE
+                          : effect.stat === "energy"
+                            ? GOLDEN
+                            : undefined,
                   }}
                   onAnimationEnd={() => onSkillEffectDone(effect.id)}
                 >
-                  +{effect.amount}
-                  {effect.stat === "xp" ? (
-                    <PixelSparklesSolid />
+                  {effect.source === "incorrectAnswer" ? (
+                    "MISS"
                   ) : (
-                    <PixelBoltSolid />
+                    <>
+                      +{effect.amount}
+                      {effect.stat === "xp" ? (
+                        <PixelSparklesSolid />
+                      ) : (
+                        <PixelBoltSolid />
+                      )}
+                    </>
                   )}
-                </div>
-              ))}
-              {missEffects.map((id, index) => (
-                <div
-                  key={id}
-                  className="skill-effect-counter"
-                  style={{
-                    fontSize: "1.2em",
-                    top: `${index * 1.4}em`,
-                    color: RED,
-                    fontWeight: "bold",
-                  }}
-                  onAnimationEnd={() => onMissEffectDone(id)}
-                >
-                  MISS
                 </div>
               ))}
               {show && (
