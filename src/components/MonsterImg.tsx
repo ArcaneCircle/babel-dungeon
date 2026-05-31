@@ -35,11 +35,17 @@ export default function MonsterImg({
     setFrames([EMPTY_IMAGE]);
     setFrameIndex(0);
 
-    getAvatarFrames(value, width, height).then((nextFrames: string[]) => {
-      if (!cancelled && nextFrames.length > 0) {
-        setFrames(nextFrames);
-      }
-    });
+    getAvatarFrames(value, width, height)
+      .then((nextFrames: string[]) => {
+        if (!cancelled && nextFrames.length > 0) {
+          setFrames(nextFrames);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setFrames([EMPTY_IMAGE]);
+        }
+      });
 
     return () => {
       cancelled = true;
