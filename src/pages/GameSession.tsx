@@ -86,6 +86,7 @@ function Quiz({
   const [processing, setProcessing] = useState(false);
   const [modal, setModal] = useState(null as ModalPayload | null);
   const [skillEffects, setSkillEffects] = useState([] as FloatingSkillEffect[]);
+  const [missEffects, setMissEffects] = useState([] as number[]);
 
   const defaultMode =
     session.mode === "easy" ||
@@ -106,8 +107,13 @@ function Quiz({
     setProcessing(true);
     setShow(false);
     if (sfxEnabled) errorSfx.play();
+    setMissEffects((v) => [...v, Date.now() + Math.random()]);
     sendMonsterUpdate(monster, 0);
   }, [monster, sfxEnabled]);
+  const onMissEffectDone = useCallback(
+    (id: number) => setMissEffects((v) => v.filter((e) => e !== id)),
+    [],
+  );
   const onSkillEffectDone = useCallback(
     (id: number) =>
       setSkillEffects((value) => value.filter((effect) => effect.id !== id)),
@@ -247,6 +253,21 @@ function Quiz({
                   ) : (
                     <PixelBoltSolid />
                   )}
+                </div>
+              ))}
+              {missEffects.map((id, index) => (
+                <div
+                  key={id}
+                  className="skill-effect-counter"
+                  style={{
+                    fontSize: "1.2em",
+                    top: `${index * 1.4}em`,
+                    color: RED,
+                    fontWeight: "bold",
+                  }}
+                  onAnimationEnd={() => onMissEffectDone(id)}
+                >
+                  MISS
                 </div>
               ))}
               {show && (
