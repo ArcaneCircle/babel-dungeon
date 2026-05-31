@@ -530,7 +530,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
       }
       case FINISHED_CMD: {
         const session = payload.session;
-        await db.monsters.bulkPut(session.correct);
+        await db.monsters.bulkPut(session.correct.map(({ lastFailed: _, ...m }) => m));
 
         if (session.energyGained) {
           const { energy, time } = getEnergy(BASE_MAX_ENERGY);
