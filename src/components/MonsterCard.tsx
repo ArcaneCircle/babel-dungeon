@@ -1,6 +1,8 @@
 import { MASTERED_STREAK } from "~/lib/game";
 import { _ } from "~/lib/i18n";
+import { getTTSEnabled } from "~/lib/storage";
 import { MAIN_COLOR, GOLDEN, TEXT_TERTIARY, BG_PRIMARY } from "~/lib/theme";
+import { tts } from "~/lib/tts";
 
 import MonsterImg from "~/components/MonsterImg";
 
@@ -37,6 +39,11 @@ export default function MonsterCard({ monster, sentence, meanings }: Props) {
         width={80}
         height={80}
         style={{ marginBottom: "0.5em" }}
+        onClick={() => {
+          if (getTTSEnabled() && !meanings) {
+            tts(sentence);
+          }
+        }}
       />
       <div style={{ marginBottom: "0.8em" }}>
         <span style={labelStyle}>{label}</span>
