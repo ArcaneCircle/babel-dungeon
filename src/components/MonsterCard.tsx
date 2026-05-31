@@ -13,6 +13,7 @@ interface Props {
 }
 
 export default function MonsterCard({ monster, sentence, meanings }: Props) {
+  const ttsEnabled = getTTSEnabled();
   const label = monster.seen
     ? _("lvl.{{l}}").replace("{{l}}", String(monster.streak + 1))
     : _("NEW");
@@ -40,7 +41,7 @@ export default function MonsterCard({ monster, sentence, meanings }: Props) {
         height={80}
         style={{ marginBottom: "0.5em" }}
         onClick={() => {
-          if (getTTSEnabled() && !meanings) {
+          if (ttsEnabled && !meanings) {
             tts(sentence);
           }
         }}
