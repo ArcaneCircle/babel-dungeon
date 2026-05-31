@@ -183,177 +183,62 @@ function draw16(context, x, y, image, sx = 0, sy = 0) {
   );
 }
 
-function drawShape(context, frame, row, value, sheetRow, origins, partsImage) {
+function drawShape(context, frame, value, sheetRow, origins, partsImage) {
   let drewCustomPart = false;
+  const baseY = IDLE_ANIMATION.y * FRAME_HEIGHT;
 
   if (value === 4 && sheetRow === 2) {
-    if (row === 1) {
-      if (row === 2 && frame === 2) {
-        draw16(
-          context,
-          frame * FRAME_WIDTH,
-          row * FRAME_HEIGHT,
-          partsImage,
-          4,
-          4,
-        );
-        drewCustomPart = true;
-      } else if (row === 1 && frame === 1) {
-        draw16(
-          context,
-          frame * FRAME_WIDTH,
-          row * FRAME_HEIGHT + 1,
-          partsImage,
-          4,
-          4,
-        );
-        drewCustomPart = true;
-      } else if (row === 1 && frame === 2) {
-        draw16(
-          context,
-          frame * FRAME_WIDTH,
-          row * FRAME_HEIGHT + 2,
-          partsImage,
-          5,
-          4,
-        );
-        drewCustomPart = true;
-      } else if (row === 1 && frame === 3) {
-        draw16(
-          context,
-          frame * FRAME_WIDTH,
-          row * FRAME_HEIGHT + 1,
-          partsImage,
-          4,
-          4,
-        );
-        drewCustomPart = true;
-      }
-    } else if (row === 3) {
-      draw16(
-        context,
-        frame * FRAME_WIDTH,
-        row * FRAME_HEIGHT + EYES_ORIGINS[3][frame],
-        partsImage,
-        4,
-        4,
-      );
+    if (frame === 1) {
+      draw16(context, frame * FRAME_WIDTH, baseY + 1, partsImage, 4, 4);
+      drewCustomPart = true;
+    } else if (frame === 2) {
+      draw16(context, frame * FRAME_WIDTH, baseY + 2, partsImage, 5, 4);
+      drewCustomPart = true;
+    } else if (frame === 3) {
+      draw16(context, frame * FRAME_WIDTH, baseY + 1, partsImage, 4, 4);
       drewCustomPart = true;
     }
   } else if (value === 6 && sheetRow === 0) {
-    if (row === 1 && (frame === 1 || frame === 3)) {
+    if (frame === 1 || frame === 3) {
       draw16(
         context,
         frame * FRAME_WIDTH,
-        row * FRAME_HEIGHT + HEAD_ORIGINS[1][frame],
+        baseY + origins[frame],
         partsImage,
         6,
         4,
       );
       drewCustomPart = true;
-    } else if (row === 1 && frame === 2) {
+    } else if (frame === 2) {
       draw16(
         context,
         frame * FRAME_WIDTH,
-        row * FRAME_HEIGHT + HEAD_ORIGINS[1][frame],
+        baseY + origins[frame],
         partsImage,
         7,
-        4,
-      );
-      drewCustomPart = true;
-    } else if (row === 2 && frame === 3) {
-      draw16(
-        context,
-        frame * FRAME_WIDTH,
-        row * FRAME_HEIGHT + HEAD_ORIGINS[1][frame],
-        partsImage,
-        6,
-        4,
-      );
-      drewCustomPart = true;
-    } else if (row === 3 && frame === 2) {
-      draw16(
-        context,
-        frame * FRAME_WIDTH,
-        row * FRAME_HEIGHT + 2,
-        partsImage,
-        8,
-        4,
-      );
-      drewCustomPart = true;
-    } else if (row === 3 && (frame === 5 || frame === 3)) {
-      draw16(
-        context,
-        frame * FRAME_WIDTH,
-        row * FRAME_HEIGHT + HEAD_ORIGINS[3][frame],
-        partsImage,
-        6,
-        4,
-      );
-      drewCustomPart = true;
-    } else if (row === 3 && frame === 4) {
-      draw16(
-        context,
-        frame * FRAME_WIDTH,
-        row * FRAME_HEIGHT + HEAD_ORIGINS[3][frame],
-        partsImage,
-        7,
-        4,
-      );
-      drewCustomPart = true;
-    } else if (row === 3 && frame === 1) {
-      draw16(
-        context,
-        frame * FRAME_WIDTH,
-        row * FRAME_HEIGHT + 2,
-        partsImage,
-        9,
-        4,
-      );
-      drewCustomPart = true;
-    }
-  } else if (value === 8 && sheetRow === 3) {
-    if ((frame === 1 || frame === 3) && row === 3) {
-      draw16(
-        context,
-        frame * FRAME_WIDTH,
-        row * FRAME_HEIGHT + EYES_ORIGINS[3][frame],
-        partsImage,
-        10,
-        4,
-      );
-      drewCustomPart = true;
-    }
-    if (frame === 2 && row === 3) {
-      draw16(
-        context,
-        frame * FRAME_WIDTH,
-        row * FRAME_HEIGHT + EYES_ORIGINS[3][frame],
-        partsImage,
-        11,
         4,
       );
       drewCustomPart = true;
     }
   } else if (value === 13 && (sheetRow === 0 || sheetRow === 1)) {
-    drawShape(context, frame, row, 6, sheetRow, origins, partsImage);
-    drawShape(context, frame, row, 12, sheetRow, origins, partsImage);
+    drawShape(context, frame, 6, sheetRow, origins, partsImage);
+    drawShape(context, frame, 12, sheetRow, origins, partsImage);
     drewCustomPart = true;
   } else if (value === 14 && (sheetRow === 0 || sheetRow === 1)) {
-    drawShape(context, frame, row, 10, sheetRow, origins, partsImage);
-    drawShape(context, frame, row, 12, sheetRow, origins, partsImage);
+    drawShape(context, frame, 10, sheetRow, origins, partsImage);
+    drawShape(context, frame, 12, sheetRow, origins, partsImage);
     drewCustomPart = true;
   } else if (value === 15 && (sheetRow === 0 || sheetRow === 1)) {
-    drawShape(context, frame, row, 7, sheetRow, origins, partsImage);
-    drawShape(context, frame, row, 12, sheetRow, origins, partsImage);
+    drawShape(context, frame, 7, sheetRow, origins, partsImage);
+    drawShape(context, frame, 12, sheetRow, origins, partsImage);
     drewCustomPart = true;
   } else if (value === 23 && (sheetRow === 0 || sheetRow === 1)) {
-    drawShape(context, frame, row, 6, sheetRow, origins, partsImage);
-    drawShape(context, frame, row, 22, sheetRow, origins, partsImage);
+    drawShape(context, frame, 6, sheetRow, origins, partsImage);
+    drawShape(context, frame, 22, sheetRow, origins, partsImage);
     drewCustomPart = true;
   } else if (value === 24 && (sheetRow === 0 || sheetRow === 1)) {
-    drawShape(context, frame, row, 7, sheetRow, origins, partsImage);
-    drawShape(context, frame, row, 22, sheetRow, origins, partsImage);
+    drawShape(context, frame, 7, sheetRow, origins, partsImage);
+    drawShape(context, frame, 22, sheetRow, origins, partsImage);
     drewCustomPart = true;
   }
 
@@ -361,7 +246,7 @@ function drawShape(context, frame, row, value, sheetRow, origins, partsImage) {
     draw16(
       context,
       frame * FRAME_WIDTH,
-      row * FRAME_HEIGHT + origins[frame],
+      baseY + origins[frame],
       partsImage,
       value,
       sheetRow,
@@ -424,21 +309,18 @@ function buildSourceCanvas(baseImage, partsImage, appearance) {
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.drawImage(baseImage, 0, 0);
 
-  drawOrigins(context, appearance.face, 3, EYES_ORIGINS, partsImage);
-  drawOrigins(context, appearance.head, 0, HEAD_ORIGINS, partsImage);
-  drawOrigins(context, appearance.head, 1, HEAD_ORIGINS, partsImage);
-  drawOrigins(context, appearance.face, 2, EYES_ORIGINS, partsImage);
+  drawOrigins(context, appearance.face, 3, EYES_ORIGINS[1], partsImage);
+  drawOrigins(context, appearance.head, 0, HEAD_ORIGINS[1], partsImage);
+  drawOrigins(context, appearance.head, 1, HEAD_ORIGINS[1], partsImage);
+  drawOrigins(context, appearance.face, 2, EYES_ORIGINS[1], partsImage);
   recolorAll(context, appearance);
 
   return canvas;
 }
 
-function drawOrigins(context, value, sheetRow, originSets, partsImage) {
-  for (let row = 0; row < originSets.length; row += 1) {
-    const origins = originSets[row];
-    for (let frame = 0; frame < origins.length; frame += 1) {
-      drawShape(context, frame, row, value, sheetRow, origins, partsImage);
-    }
+function drawOrigins(context, value, sheetRow, origins, partsImage) {
+  for (let frame = 0; frame < origins.length; frame += 1) {
+    drawShape(context, frame, value, sheetRow, origins, partsImage);
   }
 }
 

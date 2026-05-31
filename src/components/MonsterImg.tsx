@@ -42,7 +42,7 @@ export default function MonsterImg({
 
   useEffect(() => {
     if (frames.length < 2) {
-      return undefined;
+      return;
     }
 
     const intervalId = window.setInterval(() => {
