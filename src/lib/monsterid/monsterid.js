@@ -151,7 +151,11 @@ const createBodyBounds = () => {
 
 const drawShadow = (layer, body) => {
   const y = Math.min(GRID_SIZE - 1, body.bottom + 1);
-  const width = clamp(Math.floor(body.bounds[body.bounds.length - 1].width / 2), 2, 5);
+  const width = clamp(
+    Math.floor(body.bounds[body.bounds.length - 1].width / 2),
+    2,
+    5,
+  );
   for (let x = HALF_GRID - width; x <= HALF_GRID + width - 1; x += 1) {
     setPixel(layer, x, y, "rgba(15, 23, 42, 0.18)");
   }
@@ -169,10 +173,30 @@ const drawBackFeature = (layer, body, palette) => {
 
   if (style === "wings") {
     for (let step = 0; step < 4; step += 1) {
-      setPixel(layer, shoulder.left - 1 - step, shoulder.y + step - 1, palette.accent);
-      setPixel(layer, shoulder.left - 2 - step, shoulder.y + step, palette.highlight);
-      setPixel(layer, shoulder.right + 1 + step, shoulder.y + step - 1, palette.accent);
-      setPixel(layer, shoulder.right + 2 + step, shoulder.y + step, palette.highlight);
+      setPixel(
+        layer,
+        shoulder.left - 1 - step,
+        shoulder.y + step - 1,
+        palette.accent,
+      );
+      setPixel(
+        layer,
+        shoulder.left - 2 - step,
+        shoulder.y + step,
+        palette.highlight,
+      );
+      setPixel(
+        layer,
+        shoulder.right + 1 + step,
+        shoulder.y + step - 1,
+        palette.accent,
+      );
+      setPixel(
+        layer,
+        shoulder.right + 2 + step,
+        shoulder.y + step,
+        palette.highlight,
+      );
     }
     return;
   }
@@ -188,8 +212,18 @@ const drawBackFeature = (layer, body, palette) => {
 
   if (style === "fins") {
     for (let step = 0; step < 3; step += 1) {
-      setPixel(layer, center.left - 1 - step, center.y - 1 + step, palette.highlight);
-      setPixel(layer, center.right + 1 + step, center.y - 1 + step, palette.highlight);
+      setPixel(
+        layer,
+        center.left - 1 - step,
+        center.y - 1 + step,
+        palette.highlight,
+      );
+      setPixel(
+        layer,
+        center.right + 1 + step,
+        center.y - 1 + step,
+        palette.highlight,
+      );
     }
   }
 };
@@ -204,7 +238,12 @@ const drawLegs = (layer, body, palette) => {
   if (style === "tentacles") {
     for (let step = 0; step < 3; step += 1) {
       setPixel(layer, leftFoot + (step % 2), body.bottom + step, palette.shade);
-      setPixel(layer, rightFoot - (step % 2), body.bottom + step, palette.shade);
+      setPixel(
+        layer,
+        rightFoot - (step % 2),
+        body.bottom + step,
+        palette.shade,
+      );
     }
     return;
   }
@@ -424,7 +463,13 @@ const buildOutline = (pixels, color) => {
       const x = pixel.x + dx;
       const y = pixel.y + dy;
       const key = pixelKey(x, y);
-      if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE || pixels.has(key)) {
+      if (
+        x < 0 ||
+        x >= GRID_SIZE ||
+        y < 0 ||
+        y >= GRID_SIZE ||
+        pixels.has(key)
+      ) {
         continue;
       }
       outline.set(key, { x, y, color });
