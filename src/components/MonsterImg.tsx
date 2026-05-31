@@ -7,6 +7,7 @@ const IDLE_FRAME_MS = 240;
 const BASE_STYLE: React.CSSProperties = {
   imageRendering: "pixelated",
   objectFit: "contain",
+  outline: "2px solid white",
 };
 
 interface Props {
