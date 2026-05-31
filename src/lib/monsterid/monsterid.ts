@@ -12,12 +12,18 @@ const BASE_TEXTURE_SRC = "/base.png";
 const PARTS_TEXTURE_SRC = "/parts.png";
 const EMPTY_IMAGE = "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
 
-const SHAPE_OPTIONS = [
+interface ShapeOption {
+  key: string;
+  sheetRow: number;
+  max: number;
+}
+
+const SHAPE_OPTIONS: ShapeOption[] = [
   { key: "face", sheetRow: 2, max: 25 },
   { key: "head", sheetRow: 0, max: 44 },
 ];
 
-const HEAD_ORIGINS = [
+const HEAD_ORIGINS: number[][] = [
   [0],
   [0, 1, 2, 1],
   [-1, -2, 0, 1],
@@ -25,7 +31,19 @@ const HEAD_ORIGINS = [
 ];
 const EYES_ORIGINS = HEAD_ORIGINS;
 
-const COLOR_THEMES = [
+interface ColorTheme {
+  key: string;
+  defaults: string[];
+  options: string[][];
+}
+
+interface ColorThemeInput {
+  key: string;
+  defaults: string[];
+  options: string[][] | string;
+}
+
+const COLOR_THEMES_INPUT: ColorThemeInput[] = [
   {
     key: "eyes",
     defaults: ["ee7755"],
@@ -97,18 +115,20 @@ const COLOR_THEMES = [
   },
 ];
 
-COLOR_THEMES.forEach((theme) => {
+COLOR_THEMES_INPUT.forEach((theme) => {
   if (typeof theme.options === "string") {
-    theme.options = COLOR_THEMES.find(
+    theme.options = COLOR_THEMES_INPUT.find(
       (candidate) => candidate.key === theme.options,
-    ).options;
+    )!.options as string[][];
   }
 });
 
-const texturePromises = new Map();
-const avatarPromises = new Map();
+const COLOR_THEMES = COLOR_THEMES_INPUT as ColorTheme[];
 
-function createRng(hash) {
+const texturePromises = new Map<string, Promise<HTMLImageElement>>();
+const avatarPromises = new Map<string, Promise<string[]>>();
+
+function createRng(hash: string): () => number {
   const parsedState = parseInt(hash.slice(0, 8), 16);
   const fallbackState = parseInt(hash.slice(8, 16), 16);
   let state =
@@ -125,9 +145,9 @@ function createRng(hash) {
   };
 }
 
-function createAppearance(seed) {
+function createAppearance(seed: string): Record<string, number> {
   const rng = createRng(md5(seed));
-  const appearance = {};
+  const appearance: Record<string, number> = {};
 
   SHAPE_OPTIONS.forEach(({ key, max }) => {
     appearance[key] = Math.floor(rng() * (max + 1));
@@ -140,7 +160,7 @@ function createAppearance(seed) {
   return appearance;
 }
 
-function loadImage(src) {
+function loadImage(src: string): Promise<HTMLImageElement> {
   if (!texturePromises.has(src)) {
     texturePromises.set(
       src,
@@ -158,25 +178,32 @@ function loadImage(src) {
     );
   }
 
-  return texturePromises.get(src);
+  return texturePromises.get(src)!;
 }
 
-function createCanvas(width, height) {
+function createCanvas(width: number, height: number): HTMLCanvasElement {
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
   return canvas;
 }
 
-function getContext(canvas) {
-  const context = canvas.getContext("2d");
+function getContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
+  const context = canvas.getContext("2d") as CanvasRenderingContext2D;
   context.imageSmoothingEnabled = false;
-  context.mozImageSmoothingEnabled = false;
-  context.webkitImageSmoothingEnabled = false;
+  (context as any).mozImageSmoothingEnabled = false;
+  (context as any).webkitImageSmoothingEnabled = false;
   return context;
 }
 
-function draw16(context, x, y, image, sx = 0, sy = 0) {
+function draw16(
+  context: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  image: HTMLImageElement,
+  sx = 0,
+  sy = 0,
+): void {
   context.drawImage(
     image,
     sx * PART_WIDTH,
@@ -190,7 +217,14 @@ function draw16(context, x, y, image, sx = 0, sy = 0) {
   );
 }
 
-function drawShape(context, frame, value, sheetRow, origins, partsImage) {
+function drawShape(
+  context: CanvasRenderingContext2D,
+  frame: number,
+  value: number,
+  sheetRow: number,
+  origins: number[],
+  partsImage: HTMLImageElement,
+): void {
   let drewCustomPart = false;
   const baseY = IDLE_ANIMATION.y * FRAME_HEIGHT;
 
@@ -261,7 +295,7 @@ function drawShape(context, frame, value, sheetRow, origins, partsImage) {
   }
 }
 
-function hexToArr(value) {
+function hexToArr(value: string): [number, number, number] {
   return [
     parseInt(value.slice(0, 2), 16),
     parseInt(value.slice(2, 4), 16),
@@ -272,7 +306,11 @@ function hexToArr(value) {
 const COLOR_CHANNEL_TOLERANCE = 2;
 const ALPHA_MATCH_MIN = 250;
 
-function matchesSourceColor(data, pixelIndex, source) {
+function matchesSourceColor(
+  data: Uint8ClampedArray,
+  pixelIndex: number,
+  source: number[],
+): boolean {
   return (
     Math.abs(data[pixelIndex] - source[0]) <= COLOR_CHANNEL_TOLERANCE &&
     Math.abs(data[pixelIndex + 1] - source[1]) <= COLOR_CHANNEL_TOLERANCE &&
@@ -280,7 +318,11 @@ function matchesSourceColor(data, pixelIndex, source) {
   );
 }
 
-function applyTheme(data, defaults, palette) {
+function applyTheme(
+  data: Uint8ClampedArray,
+  defaults: string[],
+  palette: string[],
+): void {
   const sourcePalette = defaults.map(hexToArr);
   const targetPalette = palette.map(hexToArr);
 
@@ -301,7 +343,10 @@ function applyTheme(data, defaults, palette) {
   }
 }
 
-function recolorAll(context, appearance) {
+function recolorAll(
+  context: CanvasRenderingContext2D,
+  appearance: Record<string, number>,
+): void {
   const image = context.getImageData(
     0,
     0,
@@ -317,7 +362,11 @@ function recolorAll(context, appearance) {
   context.putImageData(image, 0, 0);
 }
 
-function buildSourceCanvas(baseImage, partsImage, appearance) {
+function buildSourceCanvas(
+  baseImage: HTMLImageElement,
+  partsImage: HTMLImageElement,
+  appearance: Record<string, number>,
+): HTMLCanvasElement {
   const canvas = createCanvas(baseImage.width, baseImage.height);
   const context = getContext(canvas);
 
@@ -333,19 +382,25 @@ function buildSourceCanvas(baseImage, partsImage, appearance) {
   return canvas;
 }
 
-function drawOrigins(context, value, sheetRow, origins, partsImage) {
+function drawOrigins(
+  context: CanvasRenderingContext2D,
+  value: number,
+  sheetRow: number,
+  origins: number[],
+  partsImage: HTMLImageElement,
+): void {
   for (let frame = 0; frame < origins.length; frame += 1) {
     drawShape(context, frame, value, sheetRow, origins, partsImage);
   }
 }
 
 function renderFrame(
-  sourceCanvas,
-  frameIndex,
-  width,
-  height,
+  sourceCanvas: HTMLCanvasElement,
+  frameIndex: number,
+  width: number,
+  height: number,
   animationRow = IDLE_ANIMATION.y,
-) {
+): string {
   const canvas = createCanvas(width, height);
   const context = getContext(canvas);
   const scale = Math.min(width / FRAME_WIDTH, height / FRAME_HEIGHT);
@@ -370,7 +425,11 @@ function renderFrame(
   return canvas.toDataURL("image/png");
 }
 
-async function generateAvatarFrames(seed, width, height) {
+async function generateAvatarFrames(
+  seed: string,
+  width: number,
+  height: number,
+): Promise<string[]> {
   const [baseImage, partsImage] = await Promise.all([
     loadImage(BASE_TEXTURE_SRC),
     loadImage(PARTS_TEXTURE_SRC),
@@ -383,24 +442,32 @@ async function generateAvatarFrames(seed, width, height) {
   );
 }
 
-export const getAvatarFrames = function (string, width, height) {
+export const getAvatarFrames = function (
+  seed: string,
+  width: number | null | undefined,
+  height: number | null | undefined,
+): Promise<string[]> {
   const resolvedWidth = Math.max(width ?? 128, 16);
   const resolvedHeight = Math.max(height ?? 128, 16);
-  const cacheKey = `${string}:${resolvedWidth}:${resolvedHeight}`;
+  const cacheKey = `${seed}:${resolvedWidth}:${resolvedHeight}`;
 
   if (!avatarPromises.has(cacheKey)) {
     avatarPromises.set(
       cacheKey,
-      generateAvatarFrames(string, resolvedWidth, resolvedHeight).catch(() => [
+      generateAvatarFrames(seed, resolvedWidth, resolvedHeight).catch(() => [
         EMPTY_IMAGE,
       ]),
     );
   }
 
-  return avatarPromises.get(cacheKey);
+  return avatarPromises.get(cacheKey)!;
 };
 
-export const getAvatar = async function (string, width, height) {
-  const frames = await getAvatarFrames(string, width, height);
+export const getAvatar = async function (
+  seed: string,
+  width: number | null | undefined,
+  height: number | null | undefined,
+): Promise<string> {
+  const frames = await getAvatarFrames(seed, width, height);
   return frames[0] || EMPTY_IMAGE;
 };
