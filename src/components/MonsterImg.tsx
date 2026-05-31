@@ -1,9 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // @ts-ignore
 import { getAvatarFrames } from "~/lib/monsterid/monsterid";
 
 const EMPTY_IMAGE = "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
+const IDLE_FRAME_MS = 240;
+const BASE_STYLE: React.CSSProperties = {
+  imageRendering: "pixelated",
+  objectFit: "contain",
+};
 
 interface Props {
   value: string;
@@ -22,6 +27,7 @@ export default function MonsterImg({
 }: Props) {
   const [frames, setFrames] = useState([EMPTY_IMAGE]);
   const [frameIndex, setFrameIndex] = useState(0);
+  const mergedStyle = useMemo(() => ({ ...BASE_STYLE, ...style }), [style]);
 
   useEffect(() => {
     let cancelled = false;
@@ -47,7 +53,7 @@ export default function MonsterImg({
 
     const intervalId = window.setInterval(() => {
       setFrameIndex((current) => (current + 1) % frames.length);
-    }, 240);
+    }, IDLE_FRAME_MS);
 
     return () => {
       window.clearInterval(intervalId);
@@ -59,7 +65,7 @@ export default function MonsterImg({
       src={frames[frameIndex] || EMPTY_IMAGE}
       width={width}
       height={height}
-      style={{ imageRendering: "pixelated", objectFit: "contain", ...style }}
+      style={mergedStyle}
       {...props}
     />
   );

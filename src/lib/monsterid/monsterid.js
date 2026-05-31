@@ -109,7 +109,11 @@ const texturePromises = new Map();
 const avatarPromises = new Map();
 
 function createRng(hash) {
-  let state = parseInt(hash.slice(0, 8), 16) || 0x6d2b79f5;
+  const parsedState = parseInt(hash.slice(0, 8), 16);
+  let state =
+    Number.isFinite(parsedState) && parsedState !== 0
+      ? parsedState
+      : 0x6d2b79f5;
   return function nextRandom() {
     state ^= state << 13;
     state ^= state >>> 17;
@@ -473,8 +477,8 @@ async function generateAvatarFrames(seed, width, height) {
 }
 
 export const getAvatarFrames = function (string, width, height) {
-  const resolvedWidth = Math.max(width || 128, 16);
-  const resolvedHeight = Math.max(height || 128, 16);
+  const resolvedWidth = Math.max(width ?? 128, 16);
+  const resolvedHeight = Math.max(height ?? 128, 16);
   const cacheKey = `${string}:${resolvedWidth}:${resolvedHeight}`;
 
   if (!avatarPromises.has(cacheKey)) {
