@@ -494,7 +494,7 @@ const drawPixels = (context, pixels, cellSize, offset) => {
 export const getAvatar = function (string, width, height) {
   const hash = md5(string);
   const seed = parseInt(hash.slice(0, 6), 16);
-  const palette = PALETTES[parseInt(hash.slice(6, 8), 16) % PALETTES.length];
+  const palette = PALETTES[parseInt(hash.slice(6, 10), 16) % PALETTES.length];
 
   width = width || 128;
   height = height || 128;
