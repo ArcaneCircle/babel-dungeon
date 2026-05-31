@@ -52,6 +52,7 @@ declare interface Monster {
   streak: number;
   due: number; // Timestamp
   seen: number; // Timestamp
+  lastFailed?: number; // Timestamp
 }
 
 declare interface Card {

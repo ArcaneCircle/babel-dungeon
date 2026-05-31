@@ -67,7 +67,7 @@ export default function GameSession({
     session.correct[session.correct.length - 1];
   return (
     <Quiz
-      key={monster.id}
+      key={`${monster.id}-${monster.lastFailed ?? 0}`}
       session={session}
       player={player}
       monster={monster}

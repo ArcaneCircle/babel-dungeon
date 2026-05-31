@@ -93,6 +93,7 @@ let pendingSessionStateUpdateTimeout: ReturnType<typeof setTimeout> | null =
   null;
 
 function updateSessionState(session: Session | null, delay = 0) {
+  const nextSession = session ? { ...session } : null;
   // Only the newest session update should win; cancel stale delayed updates.
   if (pendingSessionStateUpdateTimeout) {
     clearTimeout(pendingSessionStateUpdateTimeout);
@@ -100,12 +101,12 @@ function updateSessionState(session: Session | null, delay = 0) {
   }
   if (delay > 0) {
     pendingSessionStateUpdateTimeout = setTimeout(() => {
-      setSessionState(session);
+      setSessionState(nextSession);
       pendingSessionStateUpdateTimeout = null;
     }, delay);
     return;
   }
-  setSessionState(session);
+  setSessionState(nextSession);
 }
 
 // Initialize SENTENCES based on learning language
@@ -379,6 +380,7 @@ export function sendMonsterUpdate(
   } else {
     monster.streak = 0;
     monster.due = 0;
+    monster.lastFailed = now.getTime();
     skillEffects.push({
       source: "incorrectAnswer",
       stat: "xp",
