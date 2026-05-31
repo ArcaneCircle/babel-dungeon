@@ -110,10 +110,13 @@ const avatarPromises = new Map();
 
 function createRng(hash) {
   const parsedState = parseInt(hash.slice(0, 8), 16);
+  const fallbackState = parseInt(hash.slice(8, 16), 16);
   let state =
     Number.isFinite(parsedState) && parsedState !== 0
       ? parsedState
-      : 0x6d2b79f5;
+      : Number.isFinite(fallbackState) && fallbackState !== 0
+        ? fallbackState
+        : 0x6d2b79f5;
   return function nextRandom() {
     state ^= state << 13;
     state ^= state >>> 17;
