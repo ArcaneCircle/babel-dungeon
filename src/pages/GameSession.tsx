@@ -156,6 +156,12 @@ function Quiz({
     setShow(true);
   }, [monster.id, ttsEnabled, sfxEnabled, defaultMode]);
 
+  const onMonsterClicked = useCallback(() => {
+    if (ttsEnabled && (defaultMode || show)) {
+      tts(sentence);
+    }
+  }, [ttsEnabled, defaultMode, show, sentence]);
+
   const meaningsComp = useMemo(
     () => <Meanings key={monster.id} meanings={meanings} />,
     [monster.id],
@@ -173,9 +179,10 @@ function Quiz({
         monster={monster}
         sentence={sentence}
         meanings={defaultMode ? undefined : meaningsComp}
+        onMonsterClicked={onMonsterClicked}
       />
     ),
-    [monster.id, monster.seen],
+    [monster.id, monster.seen, sentence, defaultMode, meaningsComp, onMonsterClicked],
   );
 
   const setOpen = useCallback(

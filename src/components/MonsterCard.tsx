@@ -1,8 +1,6 @@
 import { MASTERED_STREAK } from "~/lib/game";
 import { _ } from "~/lib/i18n";
-import { getTTSEnabled } from "~/lib/storage";
 import { MAIN_COLOR, GOLDEN, TEXT_TERTIARY, BG_PRIMARY } from "~/lib/theme";
-import { tts } from "~/lib/tts";
 
 import MonsterImg from "~/components/MonsterImg";
 
@@ -10,10 +8,15 @@ interface Props {
   monster: Monster;
   sentence: string;
   meanings?: React.ReactNode;
+  onMonsterClicked?: () => void;
 }
 
-export default function MonsterCard({ monster, sentence, meanings }: Props) {
-  const ttsEnabled = getTTSEnabled();
+export default function MonsterCard({
+  monster,
+  sentence,
+  meanings,
+  onMonsterClicked,
+}: Props) {
   const label = monster.seen
     ? _("lvl.{{l}}").replace("{{l}}", String(monster.streak + 1))
     : _("NEW");
@@ -40,11 +43,7 @@ export default function MonsterCard({ monster, sentence, meanings }: Props) {
         width={80}
         height={80}
         style={{ marginBottom: "0.5em" }}
-        onClick={() => {
-          if (ttsEnabled && !meanings) {
-            tts(sentence);
-          }
-        }}
+        onClick={onMonsterClicked}
       />
       <div style={{ marginBottom: "0.8em" }}>
         <span style={labelStyle}>{label}</span>
