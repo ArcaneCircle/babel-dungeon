@@ -292,6 +292,8 @@ function SkillCard({
           <img
             src={skillIcon}
             aria-hidden
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
             style={{
               width: "3.2em",
               height: "3.2em",
@@ -339,6 +341,8 @@ function SkillCard({
               src={"/upgrade.png"}
               alt=""
               aria-hidden
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
               style={{ width: "2em", height: "2em" }}
             />
           </MenuButton>

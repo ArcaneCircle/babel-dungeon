@@ -5,5 +5,12 @@ interface Props {
 }
 
 export default function PixelatedImgIcon(props: Props) {
-  return <img className={styles.pixelated} {...props} />;
+  return (
+    <img
+      className={styles.pixelated}
+      draggable={false}
+      onContextMenu={(e) => e.preventDefault()}
+      {...props}
+    />
+  );
 }

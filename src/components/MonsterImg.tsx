@@ -73,6 +73,8 @@ export default function MonsterImg({
       src={frames[frameIndex] || EMPTY_IMAGE}
       width={width}
       height={height}
+      draggable={false}
+      onContextMenu={(e) => e.preventDefault()}
       style={mergedStyle}
       {...props}
     />

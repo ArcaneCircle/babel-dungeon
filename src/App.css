@@ -65,6 +65,11 @@ a {
   color: var(--text-primary);
 }
 
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
 .selectable,
 .selectable * {
   -webkit-user-select: text;
