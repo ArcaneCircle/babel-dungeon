@@ -27,6 +27,11 @@ export default function MonsterImg({
   style,
   ...props
 }: Props) {
+  const {
+    draggable: _draggable,
+    onContextMenu: _onContextMenu,
+    ...safeProps
+  } = props;
   const [frames, setFrames] = useState([EMPTY_IMAGE]);
   const [frameIndex, setFrameIndex] = useState(0);
   const mergedStyle = useMemo(() => ({ ...BASE_STYLE, ...style }), [style]);
@@ -73,10 +78,10 @@ export default function MonsterImg({
       src={frames[frameIndex] || EMPTY_IMAGE}
       width={width}
       height={height}
+      {...safeProps}
       draggable={false}
       onContextMenu={(e) => e.preventDefault()}
       style={mergedStyle}
-      {...props}
     />
   );
 }
