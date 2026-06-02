@@ -634,9 +634,8 @@ async function createNewSession(
     await db.monsters.bulkPut(newMonsters);
     setUnseenIndex(unseenIndex + newMonsters.length);
   }
-  if (monsters.length < 10) {
-    monsters = await db.monsters.orderBy("due").limit(10).toArray();
-  }
+  // Fetch a larger pool so that after dedup filtering we still have 10 monsters
+  monsters = await db.monsters.orderBy("due").limit(30).toArray();
 
   monsters.sort((mon1, mon2) => {
     if (mon1.seen === 0 || mon2.seen === 0) {
@@ -665,7 +664,7 @@ async function createNewSession(
     failedIds: [],
     correct: [],
     failed: [],
-    pending: monsters,
+    pending: monsters.slice(0, 10),
   };
 }
 
