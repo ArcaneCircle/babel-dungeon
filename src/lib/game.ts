@@ -664,7 +664,7 @@ async function createNewSession(
     const deduped: Monster[] = [];
     for (const monster of monsters) {
       if (monster.streak >= MASTERED_STREAK) {
-        const key = getCard(monster.id).meanings.join("|");
+        const key = getCard(monster.id).meanings.join("\0");
         const primary = seenMeanings.get(key);
         if (primary) {
           if (!primary.siblings) primary.siblings = [];
@@ -694,21 +694,21 @@ async function createNewSession(
 }
 
 function updateMonster(monster: Monster, session: Session) {
-  const { siblings, ...monsterWithoutSiblings } = monster;
+  const { siblings, ...mainMonster } = monster;
   let array = session.pending;
-  let index = array.findIndex((c) => c.id === monsterWithoutSiblings.id);
+  let index = array.findIndex((c) => c.id === mainMonster.id);
   if (index === -1) {
     array = session.failed;
-    index = array.findIndex((c) => c.id === monsterWithoutSiblings.id);
+    index = array.findIndex((c) => c.id === mainMonster.id);
   }
   array.splice(index, 1);
-  if (monsterWithoutSiblings.streak === 0) {
-    session.failed.push(monsterWithoutSiblings);
-    if (session.failedIds.indexOf(monsterWithoutSiblings.id) === -1) {
-      session.failedIds.push(monsterWithoutSiblings.id);
+  if (mainMonster.streak === 0) {
+    session.failed.push(mainMonster);
+    if (session.failedIds.indexOf(mainMonster.id) === -1) {
+      session.failedIds.push(mainMonster.id);
     }
   } else {
-    session.correct.push(monsterWithoutSiblings);
+    session.correct.push(mainMonster);
   }
   // Ungroup siblings: add each updated sibling directly to correct or failed
   if (siblings && siblings.length > 0) {
