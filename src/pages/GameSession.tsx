@@ -58,7 +58,9 @@ function getListeningSegments(sentence: string): ListeningSegment[] {
   const segments: ListeningSegment[] = [];
   let lastIndex = 0;
   let answerIndex = 0;
-  for (const match of sentence.matchAll(WORD_SEGMENT_REGEX)) {
+  WORD_SEGMENT_REGEX.lastIndex = 0;
+  let match = WORD_SEGMENT_REGEX.exec(sentence);
+  while (match) {
     const start = match.index ?? 0;
     if (start > lastIndex) {
       segments.push({
@@ -72,6 +74,7 @@ function getListeningSegments(sentence: string): ListeningSegment[] {
       answerIndex: answerIndex++,
     });
     lastIndex = start + match[0].length;
+    match = WORD_SEGMENT_REGEX.exec(sentence);
   }
   if (lastIndex < sentence.length) {
     segments.push({ type: "separator", text: sentence.slice(lastIndex) });
