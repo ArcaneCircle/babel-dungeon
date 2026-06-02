@@ -275,7 +275,8 @@ function Quiz({
             const correct =
               normalizeListeningAnswer(answer) ===
               normalizeListeningAnswer(segment.text);
-            const displayAnswer = answer.trim() || "_".repeat(segment.text.length);
+            const displayAnswer =
+              answer.trim() || "_".repeat(segment.text.length);
 
             if (show) {
               return correct ? (
@@ -304,7 +305,10 @@ function Quiz({
                 placeholder={"_".repeat(segment.text.length)}
                 aria-label={`${_("Listening Practice")} ${segment.answerIndex + 1}`}
                 onChange={(event) =>
-                  updateListeningAnswer(segment.answerIndex, event.currentTarget.value)
+                  updateListeningAnswer(
+                    segment.answerIndex,
+                    event.currentTarget.value,
+                  )
                 }
                 onKeyDown={(event) => {
                   if (event.key === "Enter") onShow();

@@ -52,8 +52,7 @@ export default function GameModeModal({ player, onNoEnergy, ...props }: Props) {
 
   const easyColor = player.energy < energyCostEasy ? RED : undefined;
   const normalColor = player.energy < energyCostNormal ? RED : undefined;
-  const listeningColor =
-    player.energy < energyCostListening ? RED : undefined;
+  const listeningColor = player.energy < energyCostListening ? RED : undefined;
 
   return (
     <ConfirmModal buttonText={_("Cancel")} {...props}>
