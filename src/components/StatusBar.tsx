@@ -17,8 +17,13 @@ const AlignedSpan = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function StatusBar({ session, ...props }: Props) {
-  const total =
-    session.correct.length + session.failed.length + session.pending.length;
+  const siblingCount = (monsters: Monster[]) =>
+    monsters.reduce((acc, m) => acc + (m.siblings?.length ?? 0), 0);
+
+  const correctCount = session.correct.length + siblingCount(session.correct);
+  const failedCount = session.failed.length + siblingCount(session.failed);
+  const pendingCount = session.pending.length + siblingCount(session.pending);
+  const total = correctCount + failedCount + pendingCount;
 
   return (
     <div {...props}>
@@ -34,20 +39,20 @@ export default function StatusBar({ session, ...props }: Props) {
           <PixelThumbsupSolid
             style={{ color: MAIN_COLOR, marginRight: "0.2em" }}
           />
-          {session.correct.length}
+          {correctCount}
         </AlignedSpan>
         <AlignedSpan>
           <PixelThumbsdownSolid style={{ color: RED, marginRight: "0.2em" }} />
-          {session.failed.length}
+          {failedCount}
         </AlignedSpan>
         <AlignedSpan>
           <PixelFaceThinkingSolid
             style={{ color: GOLDEN, marginRight: "0.2em" }}
           />
-          {session.pending.length}
+          {pendingCount}
         </AlignedSpan>
       </div>
-      <BasicProgressBar progress={session.correct.length} total={total} />
+      <BasicProgressBar progress={correctCount} total={total} />
     </div>
   );
 }

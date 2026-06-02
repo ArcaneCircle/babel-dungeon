@@ -310,19 +310,73 @@ function getResultsModal(
   };
 }
 
+function computeNewDue(newStreak: number, correct: number, now: Date): number {
+  const addHours = (hours: number): number =>
+    new Date(now).setHours(now.getHours() + hours);
+  const addDays = (days: number): number => {
+    return new Date(new Date(now).setHours(0, 0, 0, 0)).setDate(
+      now.getDate() + days,
+    );
+  };
+  switch (newStreak) {
+    case 1:
+      return addHours(2);
+    case 2:
+      return addHours(24);
+    case 3:
+      return addHours(48);
+    default: {
+      if (newStreak > 15) {
+        const mul = correct > 1 ? 10 : 4;
+        return addDays(30 * 5 + newStreak * mul);
+      } else if (newStreak > 10) {
+        return addDays(30 * (newStreak - 10));
+      } else if (newStreak > MASTERED_STREAK) {
+        return addDays(newStreak * 2);
+      } else {
+        return addDays(newStreak);
+      }
+    }
+  }
+}
+
+function applyMonsterResult(
+  monster: Monster,
+  correct: number,
+  now: Date,
+): Monster {
+  monster = { ...monster };
+  monster.seen = now.getTime();
+  if (correct > 0) {
+    monster.streak = Math.min(monster.streak + correct, MAX_MONSTER_STREAK);
+    monster.due = computeNewDue(monster.streak, correct, now);
+  } else {
+    monster.streak = 0;
+    monster.due = 0;
+    monster.lastFailed = now.getTime();
+  }
+  return monster;
+}
+
 export function sendMonsterUpdate(
   monster: Monster,
   correct: number,
 ): MonsterUpdateResult {
-  monster = { ...monster };
   let modal = null;
   const skillEffects: SkillEffectGain[] = [];
   const now = new Date();
   const level = getLevel();
-  monster.seen = now.getTime();
   let xp = 0;
+
+  // Pre-compute updated siblings using the same answer result
+  const updatedSiblings = monster.siblings?.map((s) =>
+    applyMonsterResult(s, correct, now),
+  );
+
+  monster = applyMonsterResult(monster, correct, now);
+  if (updatedSiblings) monster.siblings = updatedSiblings;
+
   if (correct > 0) {
-    monster.streak = Math.min(monster.streak + correct, MAX_MONSTER_STREAK);
     if (level !== MAX_LEVEL) {
       const bonus = Math.min(Math.floor(level / 5), 40);
       xp = Math.min(bonus + monster.streak, 50) + getFastLearnerSkillLevel();
@@ -341,45 +395,7 @@ export function sendMonsterUpdate(
         });
       }
     }
-
-    const addHours = (hours: number): number =>
-      new Date(now).setHours(now.getHours() + hours);
-    const addDays = (days: number): number => {
-      return new Date(new Date(now).setHours(0, 0, 0, 0)).setDate(
-        now.getDate() + days,
-      );
-    };
-
-    switch (monster.streak) {
-      case 1: {
-        monster.due = addHours(2);
-        break;
-      }
-      case 2: {
-        monster.due = addHours(24);
-        break;
-      }
-      case 3: {
-        monster.due = addHours(48);
-        break;
-      }
-      default: {
-        if (monster.streak > 15) {
-          const mul = correct > 1 ? 10 : 4;
-          monster.due = addDays(30 * 5 + monster.streak * mul);
-        } else if (monster.streak > 10) {
-          monster.due = addDays(30 * (monster.streak - 10));
-        } else if (monster.streak > MASTERED_STREAK) {
-          monster.due = addDays(monster.streak * 2);
-        } else {
-          monster.due = addDays(monster.streak);
-        }
-      }
-    }
   } else {
-    monster.streak = 0;
-    monster.due = 0;
-    monster.lastFailed = now.getTime();
     skillEffects.push({
       source: "incorrectAnswer",
       stat: "xp",
@@ -640,6 +656,30 @@ async function createNewSession(
     return 0;
   });
 
+  // In normal mode, mastered monsters are displayed in inverted mode (meaning at top,
+  // sentence revealed). Multiple monsters can share the same meaning, causing duplicates
+  // from the player's perspective. Deduplicate by merging them via `siblings`.
+  if (mode === "normal") {
+    const seenMeanings = new Map<string, Monster>();
+    const deduped: Monster[] = [];
+    for (const monster of monsters) {
+      if (monster.streak >= MASTERED_STREAK) {
+        const key = getCard(monster.id).meanings.join("|");
+        const primary = seenMeanings.get(key);
+        if (primary) {
+          if (!primary.siblings) primary.siblings = [];
+          primary.siblings.push({ ...monster });
+        } else {
+          seenMeanings.set(key, monster);
+          deduped.push(monster);
+        }
+      } else {
+        deduped.push(monster);
+      }
+    }
+    monsters = deduped;
+  }
+
   return {
     start,
     mode,
@@ -654,20 +694,34 @@ async function createNewSession(
 }
 
 function updateMonster(monster: Monster, session: Session) {
+  const { siblings, ...monsterWithoutSiblings } = monster;
   let array = session.pending;
-  let index = array.findIndex((c) => c.id === monster.id);
+  let index = array.findIndex((c) => c.id === monsterWithoutSiblings.id);
   if (index === -1) {
     array = session.failed;
-    index = array.findIndex((c) => c.id === monster.id);
+    index = array.findIndex((c) => c.id === monsterWithoutSiblings.id);
   }
   array.splice(index, 1);
-  if (monster.streak === 0) {
-    session.failed.push(monster);
-    if (session.failedIds.indexOf(monster.id) === -1) {
-      session.failedIds.push(monster.id);
+  if (monsterWithoutSiblings.streak === 0) {
+    session.failed.push(monsterWithoutSiblings);
+    if (session.failedIds.indexOf(monsterWithoutSiblings.id) === -1) {
+      session.failedIds.push(monsterWithoutSiblings.id);
     }
   } else {
-    session.correct.push(monster);
+    session.correct.push(monsterWithoutSiblings);
+  }
+  // Ungroup siblings: add each updated sibling directly to correct or failed
+  if (siblings && siblings.length > 0) {
+    for (const sibling of siblings) {
+      if (sibling.streak === 0) {
+        session.failed.push(sibling);
+        if (session.failedIds.indexOf(sibling.id) === -1) {
+          session.failedIds.push(sibling.id);
+        }
+      } else {
+        session.correct.push(sibling);
+      }
+    }
   }
 }
 

@@ -53,6 +53,7 @@ declare interface Monster {
   due: number; // Timestamp
   seen: number; // Timestamp
   lastFailed?: number; // Timestamp
+  siblings?: Monster[]; // Monsters with the same displayed meaning (inverted/normal mode)
 }
 
 declare interface Card {
