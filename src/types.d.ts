@@ -138,7 +138,7 @@ declare interface Backup {
   learningLanguage: string;
 }
 
-declare type GameMode = "easy" | "normal";
+declare type GameMode = "easy" | "normal" | "listening";
 
 declare type ModalPayload =
   | {

@@ -23,6 +23,7 @@ function getVoice() {
 export function tts(text: string) {
   try {
     if (!voice) voice = getVoice();
+    window.speechSynthesis.cancel();
     const msg = new SpeechSynthesisUtterance();
     msg.text = text;
     if (voice) {

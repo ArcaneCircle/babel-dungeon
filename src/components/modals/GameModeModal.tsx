@@ -29,6 +29,11 @@ export default function GameModeModal({ player, onNoEnergy, ...props }: Props) {
     player.toReview,
     player.skills.berserker,
   );
+  const energyCostListening = getPlayEnergyCost(
+    "listening",
+    player.toReview,
+    player.skills.berserker,
+  );
   const playEasy = useCallback(() => {
     if (!startNewGame("easy", energyCostEasy)) {
       onNoEnergy();
@@ -39,9 +44,16 @@ export default function GameModeModal({ player, onNoEnergy, ...props }: Props) {
       onNoEnergy();
     }
   }, [energyCostNormal, onNoEnergy]);
+  const playListening = useCallback(() => {
+    if (!startNewGame("listening", energyCostListening)) {
+      onNoEnergy();
+    }
+  }, [energyCostListening, onNoEnergy]);
 
   const easyColor = player.energy < energyCostEasy ? RED : undefined;
   const normalColor = player.energy < energyCostNormal ? RED : undefined;
+  const listeningColor =
+    player.energy < energyCostListening ? RED : undefined;
 
   return (
     <ConfirmModal buttonText={_("Cancel")} {...props}>
@@ -74,6 +86,18 @@ export default function GameModeModal({ player, onNoEnergy, ...props }: Props) {
               </div>
             }
             onClick={playNormal}
+          />
+        </MenuItem>
+        <MenuItem>
+          <MenuPreference
+            name={_("Listening Practice")}
+            state={
+              <div style={{ color: listeningColor }}>
+                {`${-energyCostListening}`}
+                <PixelBoltSolid />
+              </div>
+            }
+            onClick={playListening}
           />
         </MenuItem>
       </div>

@@ -26,6 +26,7 @@
   "GAME MODE": "MODO DE JUEGO",
   "Easy": "Fácil",
   "Normal": "Normal",
+  "Listening Practice": "Práctica de escucha",
   "Cancel": "Cancelar",
 
   "+{{x}}xp": "+{{x}}xp",
@@ -33,6 +34,8 @@
   "NEW": "NUEVO",
   "Did you know it?": "¿Lo sabías?",
   "Reveal": "Revelar",
+  "Check": "Comprobar",
+  "Repeat TTS": "Repetir TTS",
 
   "CREDITS": "CRÉDITOS",
   "Developer: Asiel Diaz Benitez (adb)": "Desarrollador: Asiel Diaz Benitez (adb)",

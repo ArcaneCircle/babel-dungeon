@@ -26,6 +26,7 @@
   "GAME MODE": "JOLAS MODUA",
   "Easy": "Erraza",
   "Normal": "Normala",
+  "Listening Practice": "Entzumen praktika",
   "Cancel": "Bertan behera utzi",
 
   "+{{x}}xp": "+{{x}}xp",
@@ -33,6 +34,8 @@
   "NEW": "BERRIA",
   "Did you know it?": "Bazenekien?",
   "Reveal": "Erakutsi",
+  "Check": "Egiaztatu",
+  "Repeat TTS": "Errepikatu TTS",
 
   "CREDITS": "KREDITUAK",
   "Developer: Asiel Diaz Benitez (adb)": "Garatzailea: Asiel Diaz Benitez (adb)",
