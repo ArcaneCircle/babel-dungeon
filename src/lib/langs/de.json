@@ -27,6 +27,7 @@
   "Easy": "Leicht",
   "Normal": "Normal",
   "Listening Practice": "Hörverständnis",
+  "Listening Practice Answer {{x}}": "Hörverständnis-Antwort {{x}}",
   "Cancel": "Abbrechen",
 
   "+{{x}}xp": "+{{x}}xp",

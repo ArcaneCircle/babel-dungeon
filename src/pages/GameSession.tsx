@@ -61,7 +61,7 @@ function getListeningSegments(sentence: string): ListeningSegment[] {
   WORD_SEGMENT_REGEX.lastIndex = 0;
   let match = WORD_SEGMENT_REGEX.exec(sentence);
   while (match) {
-    const start = match.index ?? 0;
+    const start = match.index;
     if (start > lastIndex) {
       segments.push({
         type: "separator",
@@ -83,7 +83,7 @@ function getListeningSegments(sentence: string): ListeningSegment[] {
 }
 
 function normalizeListeningAnswer(text: string): string {
-  return text.normalize("NFKC").trim().toLocaleLowerCase();
+  return text.normalize("NFKC").trim().toLowerCase();
 }
 
 type FloatingSkillEffect = SkillEffectGain & {
@@ -303,7 +303,10 @@ function Quiz({
                 key={`word-${index}`}
                 value={answer}
                 placeholder={"_".repeat(segment.text.length)}
-                aria-label={`${_("Listening Practice")} ${segment.answerIndex + 1}`}
+                aria-label={_("Listening Practice Answer {{x}}").replace(
+                  "{{x}}",
+                  String(segment.answerIndex + 1),
+                )}
                 onChange={(event) =>
                   updateListeningAnswer(
                     segment.answerIndex,
