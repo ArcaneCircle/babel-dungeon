@@ -76,6 +76,7 @@ const MONSTER_UPDATE_CMD = "mon-up",
   FINISHED_CMD = "finished",
   IMPORT_CMD = "import";
 const MAX_MONSTER_STREAK = 999;
+const EMPTY_MEANING_KEY = "__EMPTY_MEANING__";
 let energyLastCheck = 0;
 let setPlayerState = null as ((player: Player) => void) | null;
 let setSessionState = (_: Session | null) => {};
@@ -154,6 +155,10 @@ setTimeout(workerLoop, 0);
 export function getCard(id: number): Card {
   const [sentence, meaning] = SENTENCES[id].split("\t");
   return { id, sentence, meanings: meaning.split("|") };
+}
+
+export function getPrimaryMeaning(id: number): string {
+  return getCard(id).meanings[0]?.trim() || "";
 }
 
 export async function getPlayer(): Promise<Player> {
@@ -639,6 +644,17 @@ async function createNewSession(
     }
     return 0;
   });
+
+  if (mode === "normal") {
+    const seenMeanings = new Set<string>();
+    monsters = monsters.filter((monster) => {
+      if (monster.streak < MASTERED_STREAK) return true;
+      const meaning = getPrimaryMeaning(monster.id) || EMPTY_MEANING_KEY;
+      if (seenMeanings.has(meaning)) return false;
+      seenMeanings.add(meaning);
+      return true;
+    });
+  }
 
   return {
     start,

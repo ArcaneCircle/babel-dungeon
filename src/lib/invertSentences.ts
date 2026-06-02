@@ -1,5 +1,7 @@
 import { SENTENCES } from "~/lib/sentences";
 
+let meaningToSentencesCache: Map<string, string[]> | null = null;
+
 /**
  * Inverts the SENTENCES array from LANG1->LANG2 to LANG2->LANG1
  * Groups sentences by their shared meanings.
@@ -36,12 +38,47 @@ function invertSentencesArray(sentences: string[]): string[] {
   );
 }
 
+function getMeaningToSentences(): Map<string, string[]> {
+  if (meaningToSentencesCache) return meaningToSentencesCache;
+
+  const map = new Map<string, Set<string>>();
+  for (const line of SENTENCES) {
+    const [sentence, meaningsStr] = line.split("\t");
+    if (!sentence || !meaningsStr) continue;
+
+    const meanings = meaningsStr.split("|");
+    for (const meaning of meanings) {
+      const trimmedMeaning = meaning.trim();
+      if (!trimmedMeaning) continue;
+      let sentences = map.get(trimmedMeaning);
+      if (!sentences) {
+        sentences = new Set();
+        map.set(trimmedMeaning, sentences);
+      }
+      sentences.add(sentence.trim());
+    }
+  }
+
+  meaningToSentencesCache = new Map(
+    Array.from(map.entries()).map(([meaning, sentences]) => [
+      meaning,
+      Array.from(sentences),
+    ]),
+  );
+  return meaningToSentencesCache;
+}
+
+export function getSentencesForMeaning(meaning: string): string[] {
+  return getMeaningToSentences().get(meaning.trim()) ?? [];
+}
+
 /**
  * Initializes the SENTENCES array based on learning language.
  * Must be called once at app startup.
  * Replaces SENTENCES in-place if learning LANG2.
  */
 export function initializeSentences(learningLang: string): void {
+  meaningToSentencesCache = null;
   if (learningLang === "LANG2") {
     const inverted = invertSentencesArray(SENTENCES);
     SENTENCES.length = 0;

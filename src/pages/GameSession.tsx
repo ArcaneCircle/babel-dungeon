@@ -8,7 +8,13 @@ import PixelBoltSolid from "~icons/pixel/bolt-solid";
 import { _ } from "~/lib/i18n";
 import { getTTSEnabled, getSFXEnabled } from "~/lib/storage";
 import { successSfx, errorSfx, clickSfx } from "~/lib/sounds";
-import { MASTERED_STREAK, getCard, sendMonsterUpdate } from "~/lib/game";
+import {
+  MASTERED_STREAK,
+  getCard,
+  getPrimaryMeaning,
+  sendMonsterUpdate,
+} from "~/lib/game";
+import { getSentencesForMeaning } from "~/lib/invertSentences";
 import { tts } from "~/lib/tts";
 import {
   MAIN_COLOR,
@@ -94,14 +100,22 @@ function Quiz({
   const ttsEnabled = getTTSEnabled();
   const sfxEnabled = getSFXEnabled();
   const { sentence, meanings } = getCard(monster.id);
+  const displaySentence = defaultMode
+    ? sentence
+    : getPrimaryMeaning(monster.id);
+  const matchingSentences = getSentencesForMeaning(displaySentence);
+  let displayMeanings = meanings;
+  if (!defaultMode) {
+    displayMeanings = matchingSentences.length ? matchingSentences : [sentence];
+  }
 
   const showingResults = !!modal;
 
   useEffect(() => {
     if (ttsEnabled && defaultMode && !showingResults && !document.hidden) {
-      tts(sentence);
+      tts(displaySentence);
     }
-  }, [monster, showingResults]);
+  }, [monster, showingResults, ttsEnabled, defaultMode, displaySentence]);
 
   const onSkillEffectDone = useCallback(
     (id: number) =>
@@ -149,23 +163,21 @@ function Quiz({
 
   const onShow = useCallback(() => {
     if (ttsEnabled && !defaultMode) {
-      tts(sentence);
+      tts(displaySentence);
     } else if (sfxEnabled) {
       clickSfx.play();
     }
     setShow(true);
-  }, [monster.id, ttsEnabled, sfxEnabled, defaultMode]);
+  }, [monster.id, ttsEnabled, sfxEnabled, defaultMode, displaySentence]);
 
   const onMonsterClicked = useCallback(() => {
-    if (defaultMode || show) tts(sentence);
-  }, [defaultMode, show, sentence]);
+    if (defaultMode || show) tts(displaySentence);
+  }, [defaultMode, show, displaySentence]);
 
   const meaningsComp = useMemo(
-    () => <Meanings key={monster.id} meanings={meanings} />,
-    [monster.id],
+    () => <Meanings key={monster.id} meanings={displayMeanings} />,
+    [monster.id, displayMeanings],
   );
-
-  const sentenceSize = sentence.length > 80 ? "0.9em" : undefined;
 
   const statusBarM = useMemo(
     () => <StatusBar session={session} style={statusBarStyle} />,
@@ -175,7 +187,7 @@ function Quiz({
     () => (
       <MonsterCard
         monster={monster}
-        sentence={sentence}
+        sentence={displaySentence}
         meanings={defaultMode ? undefined : meaningsComp}
         onMonsterClicked={onMonsterClicked}
       />
@@ -183,7 +195,7 @@ function Quiz({
     [
       monster.id,
       monster.seen,
-      sentence,
+      displaySentence,
       defaultMode,
       meaningsComp,
       onMonsterClicked,
@@ -279,16 +291,7 @@ function Quiz({
                   <div style={{ paddingTop: "0.5em", paddingBottom: "0.5em" }}>
                     <span style={{ fontSize: "1.5em" }}>↓</span>
                   </div>
-                  {defaultMode ? (
-                    meaningsComp
-                  ) : (
-                    <div
-                      className="selectable"
-                      style={{ fontSize: sentenceSize }}
-                    >
-                      {sentence}
-                    </div>
-                  )}
+                  {meaningsComp}
                 </>
               )}
             </div>
