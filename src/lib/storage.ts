@@ -5,6 +5,8 @@ import { SENTENCES } from "~/lib/sentences";
 import { applyPixelFont } from "~/lib/theme";
 
 const VERSION = 5;
+const ENABLED_STORAGE_VALUE = "1";
+const DISABLED_STORAGE_VALUE = "0";
 
 export const db = new Dexie("gamedb") as Dexie & {
   monsters: EntityTable<Monster, "id">;
@@ -86,8 +88,8 @@ export async function importBackup(backup: Backup) {
   // UI settings
   localStorage.sfx = backup.sfx || "";
   localStorage.tts = backup.tts || "";
-  localStorage.pixelFont = backup.pixelFont || "1";
-  applyPixelFont(localStorage.pixelFont === "1");
+  localStorage.pixelFont = backup.pixelFont || ENABLED_STORAGE_VALUE;
+  applyPixelFont(localStorage.pixelFont === ENABLED_STORAGE_VALUE);
   localStorage.learningLanguage = backup.learningLanguage || "LANG1";
 }
 
@@ -133,11 +135,13 @@ export function setTTSEnabled(enabled: boolean) {
 }
 
 export function getPixelFontEnabled(): boolean {
-  return parseInt(localStorage.pixelFont || "1") === 1;
+  return localStorage.pixelFont !== DISABLED_STORAGE_VALUE;
 }
 
 export function setPixelFontEnabled(enabled: boolean) {
-  localStorage.pixelFont = enabled ? "1" : "0";
+  localStorage.pixelFont = enabled
+    ? ENABLED_STORAGE_VALUE
+    : DISABLED_STORAGE_VALUE;
 }
 
 export function getLearningLanguage(): string {
