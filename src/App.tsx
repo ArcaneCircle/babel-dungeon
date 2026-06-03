@@ -1,6 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 import { initGame } from "~/lib/game";
+import { getPixelFontEnabled } from "~/lib/storage";
+import { applyPixelFont } from "~/lib/theme";
 
 import Home from "~/pages/Home";
 import GameSession from "~/pages/GameSession";
@@ -18,6 +20,7 @@ export default function App() {
   const [welcomeComplete, setWelcomeCompleteState] = useState(false);
   const [screen, setScreen] = useState("home" as "home" | "skills");
   useMemo(() => initGame(setSession, setPlayer, setWelcomeCompleteState), []);
+  useEffect(() => applyPixelFont(getPixelFontEnabled()), []);
 
   const playing = session && session.pending.length + session.failed.length;
 

@@ -40,6 +40,7 @@ export async function exportBackup(): Promise<Backup> {
     // UI settings
     sfx: localStorage.sfx,
     tts: localStorage.tts,
+    pixelFont: localStorage.pixelFont,
     learningLanguage: localStorage.learningLanguage,
   };
 }
@@ -84,6 +85,7 @@ export async function importBackup(backup: Backup) {
   // UI settings
   localStorage.sfx = backup.sfx || "";
   localStorage.tts = backup.tts || "";
+  localStorage.pixelFont = backup.pixelFont || "1";
   localStorage.learningLanguage = backup.learningLanguage || "LANG1";
 }
 
@@ -126,6 +128,14 @@ export function getTTSEnabled(): boolean {
 
 export function setTTSEnabled(enabled: boolean) {
   localStorage.tts = enabled ? 1 : 0;
+}
+
+export function getPixelFontEnabled(): boolean {
+  return parseInt(localStorage.pixelFont || "1") === 1;
+}
+
+export function setPixelFontEnabled(enabled: boolean) {
+  localStorage.pixelFont = enabled ? 1 : 0;
 }
 
 export function getLearningLanguage(): string {

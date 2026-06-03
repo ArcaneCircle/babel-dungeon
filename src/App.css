@@ -54,6 +54,12 @@ body {
   -webkit-font-smoothing: none;
 }
 
+body.system-font {
+  font-family: system-ui;
+  font-smooth: auto;
+  -webkit-font-smoothing: auto;
+}
+
 img {
   -webkit-user-drag: none;
 }

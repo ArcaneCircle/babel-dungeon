@@ -135,6 +135,7 @@ declare interface Backup {
   onFireSkill: string;
   sfx: string;
   tts: string;
+  pixelFont?: string;
   learningLanguage: string;
 }
 

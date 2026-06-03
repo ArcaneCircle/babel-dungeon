@@ -6,8 +6,11 @@ import {
   setSFXEnabled,
   getTTSEnabled,
   setTTSEnabled,
+  getPixelFontEnabled,
+  setPixelFontEnabled,
   exportBackup,
 } from "~/lib/storage";
+import { applyPixelFont } from "~/lib/theme";
 
 import MenuPreference from "~/components/MenuPreference";
 import MenuButton from "~/components/MenuButton";
@@ -27,6 +30,7 @@ export default function SettingsModal({ onShowCredits, ...props }: Props) {
   const { setOpen } = useContext(ModalContext);
   const [sfxEnabled, setSFX] = useState(getSFXEnabled());
   const [ttsEnabled, setTTS] = useState(getTTSEnabled());
+  const [pixelFontEnabled, setPixelFont] = useState(getPixelFontEnabled());
 
   const toggleSFX = () => {
     setSFX((enabled) => {
@@ -39,6 +43,14 @@ export default function SettingsModal({ onShowCredits, ...props }: Props) {
     setTTS((enabled) => {
       enabled = !enabled;
       setTTSEnabled(enabled);
+      return enabled;
+    });
+  };
+  const togglePixelFont = () => {
+    setPixelFont((enabled) => {
+      enabled = !enabled;
+      setPixelFontEnabled(enabled);
+      applyPixelFont(enabled);
       return enabled;
     });
   };
@@ -56,6 +68,7 @@ export default function SettingsModal({ onShowCredits, ...props }: Props) {
 
   const sfxState = _(sfxEnabled ? "[ ON]" : "[OFF]");
   const ttsState = _(ttsEnabled ? "[ ON]" : "[OFF]");
+  const pixelFontState = _(pixelFontEnabled ? "[ ON]" : "[OFF]");
 
   return (
     <ConfirmModal {...props}>
@@ -76,6 +89,13 @@ export default function SettingsModal({ onShowCredits, ...props }: Props) {
             name={_("TTS")}
             state={ttsState}
             onClick={toggleTTS}
+          />
+        </MenuItem>
+        <MenuItem>
+          <MenuPreference
+            name={_("PIXEL FONT")}
+            state={pixelFontState}
+            onClick={togglePixelFont}
           />
         </MenuItem>
         <MenuItem>
