@@ -2,6 +2,7 @@ import Dexie, { type EntityTable } from "dexie";
 
 import { LANG1_CODE, LANG2_CODE } from "~/lib/constants";
 import { SENTENCES } from "~/lib/sentences";
+import { applyPixelFont } from "~/lib/theme";
 
 const VERSION = 5;
 
@@ -86,6 +87,7 @@ export async function importBackup(backup: Backup) {
   localStorage.sfx = backup.sfx || "";
   localStorage.tts = backup.tts || "";
   localStorage.pixelFont = backup.pixelFont || "1";
+  applyPixelFont(localStorage.pixelFont === "1");
   localStorage.learningLanguage = backup.learningLanguage || "LANG1";
 }
 
@@ -135,7 +137,7 @@ export function getPixelFontEnabled(): boolean {
 }
 
 export function setPixelFontEnabled(enabled: boolean) {
-  localStorage.pixelFont = enabled ? 1 : 0;
+  localStorage.pixelFont = enabled ? "1" : "0";
 }
 
 export function getLearningLanguage(): string {
