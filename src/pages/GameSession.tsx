@@ -147,6 +147,21 @@ function Quiz({
       )
       .map(() => ""),
   );
+  const listeningAllCorrect = useMemo(
+    () =>
+      listeningSegments
+        .filter(
+          (segment): segment is Extract<ListeningSegment, { type: "word" }> =>
+            segment.type === "word",
+        )
+        .every(
+          (segment) =>
+            normalizeListeningAnswer(
+              listeningAnswers[segment.answerIndex] ?? "",
+            ) === normalizeListeningAnswer(segment.text),
+        ),
+    [listeningAnswers, listeningSegments],
+  );
 
   const showingResults = !!modal;
 
@@ -191,6 +206,13 @@ function Quiz({
     setShowingResults(!!mod);
     setModal(mod);
   }, [monster, sfxEnabled, pushSkillEffects]);
+  const onContinue = useCallback(() => {
+    if (listeningAllCorrect) {
+      onCorrect();
+      return;
+    }
+    onFailed();
+  }, [listeningAllCorrect, onCorrect, onFailed]);
 
   const goldenTouch = player ? player.skills.goldenTouch : 0;
   const onMastered = useCallback(() => {
@@ -503,34 +525,46 @@ function Quiz({
               }}
             >
               {show ? (
-                <>
-                  <p style={{ fontSize: "0.8em", padding: "0 1em" }}>
-                    {_("Did you know it?")}
-                  </p>
+                listeningMode ? (
                   <div style={btnContainerStyle}>
                     <button
-                      style={{ ...baseBtn, background: RED }}
-                      onClick={onFailed}
-                      disabled={processing}
-                    >
-                      <PixelThumbsdownSolid />
-                    </button>
-                    <button
-                      style={{ ...baseBtn, background: GOLDEN }}
-                      onClick={onMastered}
-                      disabled={processing}
-                    >
-                      <PixelCrownSolid />
-                    </button>
-                    <button
+                      onClick={onContinue}
                       style={{ ...baseBtn, background: MAIN_COLOR }}
-                      onClick={onCorrect}
                       disabled={processing}
                     >
-                      <PixelThumbsupSolid />
+                      {_("Continue")}
                     </button>
                   </div>
-                </>
+                ) : (
+                  <>
+                    <p style={{ fontSize: "0.8em", padding: "0 1em" }}>
+                      {_("Did you know it?")}
+                    </p>
+                    <div style={btnContainerStyle}>
+                      <button
+                        style={{ ...baseBtn, background: RED }}
+                        onClick={onFailed}
+                        disabled={processing}
+                      >
+                        <PixelThumbsdownSolid />
+                      </button>
+                      <button
+                        style={{ ...baseBtn, background: GOLDEN }}
+                        onClick={onMastered}
+                        disabled={processing}
+                      >
+                        <PixelCrownSolid />
+                      </button>
+                      <button
+                        style={{ ...baseBtn, background: MAIN_COLOR }}
+                        onClick={onCorrect}
+                        disabled={processing}
+                      >
+                        <PixelThumbsupSolid />
+                      </button>
+                    </div>
+                  </>
+                )
               ) : (
                 <div style={btnContainerStyle}>
                   <button
