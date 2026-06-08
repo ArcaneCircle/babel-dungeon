@@ -30,6 +30,7 @@ export function tts(text: string) {
     } else {
       msg.lang = getLearningLanguage() === "LANG2" ? LANG2_CODE : LANG1_CODE;
     }
+    window.speechSynthesis.cancel();
     window.speechSynthesis.speak(msg);
   } catch (e) {
     console.log(e);
