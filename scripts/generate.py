@@ -30,8 +30,10 @@ def sort2(pair: tuple[int, str]) -> int:
 
 def sort3(pair: tuple[int, str]) -> int:
     words_count = len(pair[1].split())
-    if words_count <= 10:
+    if words_count <= 5:
         return 1
+    if words_count <= 10:
+        return 2
     return words_count
 
 
