@@ -3,6 +3,11 @@ import PixelRefreshSolid from "~icons/pixel/refresh-solid";
 
 import { clickSfx } from "~/lib/sounds";
 import { getSFXEnabled } from "~/lib/storage";
+import {
+  CARD_BG_COLOR,
+  CARD_INNER_BORDER_COLOR,
+  CARD_OUTER_BORDER_COLOR,
+} from "~/lib/theme";
 
 import BorderedCard from "~/components/BorderedCard";
 
@@ -27,9 +32,9 @@ export default function Meanings({ meanings }: { meanings: string[] }) {
   return (
     <BorderedCard
       textColor="black"
-      backgroundColor="#f6ca9f"
-      innerBorderColor="#e69c69"
-      outerBorderColor="#bf6f4a"
+      backgroundColor={CARD_BG_COLOR}
+      innerBorderColor={CARD_INNER_BORDER_COLOR}
+      outerBorderColor={CARD_OUTER_BORDER_COLOR}
     >
       <span className="selectable" style={{ fontSize, lineHeight: "1.5em" }}>
         {meanings[index]}

@@ -8,6 +8,10 @@ export const TEXT_SECONDARY = "var(--text-secondary)";
 export const TEXT_TERTIARY = "var(--text-tertiary)";
 export const BORDER_COLOR = "var(--border-color)";
 
+export const CARD_BG_COLOR = "#f6ca9f";
+export const CARD_INNER_BORDER_COLOR = "#e69c69";
+export const CARD_OUTER_BORDER_COLOR = "#bf6f4a";
+
 export const MAIN_COLOR = "#92c81a";
 export const GOLDEN = "#fcc200";
 export const RED = "#da342f";
