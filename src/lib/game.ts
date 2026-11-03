@@ -324,8 +324,8 @@ export function sendMonsterUpdate(
   if (correct > 0) {
     monster.streak = Math.min(monster.streak + correct, MAX_MONSTER_STREAK);
     if (level !== MAX_LEVEL) {
-      const bonus = Math.min(Math.floor(level / 5), 40);
-      xp = Math.min(bonus + monster.streak, 50) + getFastLearnerSkillLevel();
+      const lvlBonus = Math.floor(level / 5);
+      xp = lvlBonus + Math.min(monster.streak, 100) + getFastLearnerSkillLevel();
       if (rollCriticalHit()) {
         xp = Math.round(xp * CRITICAL_HIT_XP_MULTIPLIER);
         skillEffects.push({
