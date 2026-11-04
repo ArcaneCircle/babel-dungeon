@@ -12,3 +12,22 @@ const lang = ((window.navigator && window.navigator.language) || "en")
 export function _(key: TranslationKey): string {
   return (langs[lang] || {})[key] || key;
 }
+
+const ENGLISH_NAMES: Record<string, string> = {
+  eo: "Esperanto",
+  en: "English",
+  es: "Spanish",
+  de: "German",
+  fr: "French",
+  it: "Italian",
+  pt: "Portuguese",
+  ru: "Russian",
+  ja: "Japanese",
+  eu: "Basque",
+};
+
+export function langName(code: string): string {
+  const key = `lang_${code}`;
+  const translations = (langs[lang] || {}) as Record<string, string>;
+  return translations[key] || ENGLISH_NAMES[code] || code;
+}

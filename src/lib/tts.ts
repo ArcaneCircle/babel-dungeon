@@ -1,4 +1,3 @@
-import { LANG1_CODE, LANG2_CODE } from "~/lib/constants";
 import { getLearningLanguage } from "~/lib/storage";
 
 let voice = getVoice();
@@ -6,7 +5,7 @@ let voice = getVoice();
 function getVoice() {
   const llang = getLearningLanguage();
   if (!llang) return null;
-  const lang = llang === "LANG2" ? LANG2_CODE : LANG1_CODE;
+  const lang = llang.split("-")[0];
 
   try {
     const voices = window.speechSynthesis.getVoices();
@@ -28,7 +27,7 @@ export function tts(text: string) {
     if (voice) {
       msg.voice = voice;
     } else {
-      msg.lang = getLearningLanguage() === "LANG2" ? LANG2_CODE : LANG1_CODE;
+      msg.lang = getLearningLanguage().split("-")[0];
     }
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(msg);

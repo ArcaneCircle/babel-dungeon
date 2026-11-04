@@ -23,4 +23,4 @@ dist-xdc
 *.sln
 *.sw?
 *~
-src/lib/sentences.ts
+public/data/

@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
-import { LANG1_NAME, LANG2_NAME } from "~/lib/constants";
+import { LANGUAGES } from "~/lib/constants";
 import { TEXT_SECONDARY } from "~/lib/theme";
-import { _ } from "~/lib/i18n";
+import { _, langName } from "~/lib/i18n";
 import { importGame, selectLanguage } from "~/lib/game";
 
 import NoDragImg from "~/components/NoDragImg";
@@ -47,11 +47,19 @@ const versionStyle = {
 };
 
 export default function Welcome() {
-  const [stage, setStage] = useState<"initial" | "language">("initial");
+  const [stage, setStage] = useState<"initial" | "language" | "known">(
+    "initial",
+  );
+  const [learn, setLearn] = useState("");
   const [showInvalidBackup, setShowInvalidBackup] = useState(false);
 
   const onNewGame = useCallback(() => {
     setStage("language");
+  }, []);
+
+  const onSelectLearn = useCallback((code: string) => {
+    setLearn(code);
+    setStage("known");
   }, []);
 
   const onImportGame = useCallback(async () => {
@@ -92,22 +100,40 @@ export default function Welcome() {
             </div>
             <span style={versionStyle}>{__APP_VERSION__}</span>
           </>
-        ) : (
+        ) : stage === "language" ? (
           <div style={buttonContainerStyle}>
             <div style={{ textAlign: "center", marginBottom: "1em" }}>
               {_("What language do you want to learn?")}
             </div>
+            {Object.keys(LANGUAGES).map((code) => (
+              <MenuButton
+                key={code}
+                style={buttonStyle}
+                onClick={() => onSelectLearn(code)}
+              >
+                {langName(code)}
+              </MenuButton>
+            ))}
+          </div>
+        ) : (
+          <div style={buttonContainerStyle}>
+            <div style={{ textAlign: "center", marginBottom: "1em" }}>
+              {_("What language do you already speak?")}
+            </div>
+            {LANGUAGES[learn].map((code) => (
+              <MenuButton
+                key={code}
+                style={buttonStyle}
+                onClick={() => selectLanguage(`${learn}-${code}`)}
+              >
+                {langName(code)}
+              </MenuButton>
+            ))}
             <MenuButton
               style={buttonStyle}
-              onClick={() => selectLanguage("LANG1")}
+              onClick={() => setStage("language")}
             >
-              {_(LANG1_NAME)}
-            </MenuButton>
-            <MenuButton
-              style={buttonStyle}
-              onClick={() => selectLanguage("LANG2")}
-            >
-              {_(LANG2_NAME)}
+              {_("Back")}
             </MenuButton>
           </div>
         )}

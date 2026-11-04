@@ -1,7 +1,6 @@
 import { ReceivedStatusUpdate, SendingStatusUpdate } from "@webxdc/types";
 
-import { SENTENCES } from "~/lib/sentences";
-import { initializeSentences } from "~/lib/invertSentences";
+import { SENTENCES, initializeSentences } from "~/lib/sentences";
 import {
   db,
   getSession,
@@ -108,9 +107,6 @@ function updateSessionState(session: Session | null, delay = 0) {
   setSessionState(session);
 }
 
-// Initialize SENTENCES based on learning language
-initializeSentences(getLearningLanguage());
-
 // send batch of pending monster updates when user closes/minimizes the app
 function flushPendingMonsterUpdates() {
   if (pendingMonsterUpdates.length === 0) return;
@@ -206,7 +202,7 @@ export async function getPlayer(): Promise<Player> {
   };
 }
 
-export function selectLanguage(lang: "LANG1" | "LANG2") {
+export function selectLanguage(lang: string) {
   const uid = window.webxdc.selfAddr;
   window.webxdc.sendUpdate(
     {
@@ -325,7 +321,8 @@ export function sendMonsterUpdate(
     monster.streak = Math.min(monster.streak + correct, MAX_MONSTER_STREAK);
     if (level !== MAX_LEVEL) {
       const lvlBonus = Math.floor(level / 5);
-      xp = lvlBonus + Math.min(monster.streak, 100) + getFastLearnerSkillLevel();
+      xp =
+        lvlBonus + Math.min(monster.streak, 100) + getFastLearnerSkillLevel();
       if (rollCriticalHit()) {
         xp = Math.round(xp * CRITICAL_HIT_XP_MULTIPLIER);
         skillEffects.push({
@@ -490,6 +487,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         setSessionState = payload.sessionHook;
         setPlayerState = payload.playerHook;
         setWelcomeCompleteState = payload.welcomeHook;
+        await initializeSentences(getLearningLanguage());
         setWelcomeCompleteState(!!getLearningLanguage());
         updateSessionState(getSession());
         // player must be set last because it used to detect initialization
@@ -588,14 +586,13 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         break;
       }
       case LANG_CMD: {
+        await initializeSentences(payload.lang);
         setLearningLanguage(payload.lang);
-        initializeSentences(payload.lang);
         setWelcomeCompleteState(true);
         break;
       }
       case IMPORT_CMD: {
         await importBackup(payload.backup);
-        initializeSentences(getLearningLanguage());
         setWelcomeCompleteState(true);
         if (setPlayerState) setPlayerState(await getPlayer());
         updateSessionState(getSession());

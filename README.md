@@ -1,17 +1,14 @@
 # Babel Dungeon
 
 A gamified tool for vocabulary learning.
-This is the base/common shared code between the specific
-language pairs repositories.
 
-## Creating new flavor
+## Adding a new pair
 
-- update `public/manifest.toml` and `public/icon.png`
-- replace `*.tsv` with the new game data
-- update `LANG1_*` and `LANG2_*` in `src/lib/constants.ts`
-- if necessary add localization for the interface strings at
-  `src/lib/langs` and update `src/lib/i18n.ts` accordingly.
-- update `README.md`
+To add a new language pair just add a `<lang1>-<lang2>.tsv` file
+and `lang_<code>` names in `src/lib/langs/`.
+
+If necessary add localization for the interface strings at
+`src/lib/langs` and update `src/lib/i18n.ts` accordingly.
 
 ## Contributing
 

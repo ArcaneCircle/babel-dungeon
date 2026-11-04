@@ -1,7 +1,30 @@
-import { SENTENCES } from "~/lib/sentences";
+import { PAIRS } from "~/lib/constants";
+
+// Shared array, mutated in-place by initializeSentences()
+export const SENTENCES: string[] = [];
 
 /**
- * Inverts the SENTENCES array from LANG1->LANG2 to LANG2->LANG1
+ * Loads the sentences for a learning language, "<learn>-<known>".
+ * If the data file is named "<known>-<learn>" the sentences are inverted.
+ */
+export async function initializeSentences(learningLang: string) {
+  const [learn, known] = learningLang.split("-");
+  let data: string[] = [];
+  if (learn && known) {
+    const direct = PAIRS.indexOf(`${learn}-${known}`) !== -1;
+    const pair = direct ? `${learn}-${known}` : `${known}-${learn}`;
+    const resp = await fetch(`data/${pair}.json`);
+    if (!resp.ok) throw new Error(`failed to load ${pair}: ${resp.status}`);
+    data = await resp.json();
+    if (!direct) data = invertSentencesArray(data);
+  }
+  SENTENCES.length = 0;
+  // loop instead of push(...data) to avoid argument limit with large arrays
+  for (let i = 0; i < data.length; i++) SENTENCES.push(data[i]);
+}
+
+/**
+ * Inverts a sentences array from <learn>-><known> to <known>-><learn>
  * Groups sentences by their shared meanings.
  *
  * Example:
@@ -34,21 +57,4 @@ function invertSentencesArray(sentences: string[]): string[] {
       return `${meaning}\t${Array.from(sentences).join("|")}`;
     },
   );
-}
-
-/**
- * Initializes the SENTENCES array based on learning language.
- * Must be called once at app startup.
- * Replaces SENTENCES in-place if learning LANG2.
- */
-export function initializeSentences(learningLang: string): void {
-  if (learningLang === "LANG2") {
-    const inverted = invertSentencesArray(SENTENCES);
-    SENTENCES.length = 0;
-    // Use a simple loop to avoid stack overflow with large arrays
-    // The spread operator with push has a limit on the number of arguments
-    for (let i = 0; i < inverted.length; i++) {
-      SENTENCES[i] = inverted[i];
-    }
-  }
 }

@@ -1,14 +1,14 @@
 {
-  "Esperanto": "Esperantoa",
-  "English": "Ingelesa",
-  "Spanish": "Gaztelania",
-  "German": "Alemana",
-  "French": "Frantsesa",
-  "Italian": "Italiera",
-  "Portuguese": "Portugesa",
-  "Russian": "Errusiera",
-  "Japanese": "Japoniera",
-  "Basque": "Euskara",
+  "lang_eo": "Esperantoa",
+  "lang_en": "Ingelesa",
+  "lang_es": "Gaztelania",
+  "lang_de": "Alemana",
+  "lang_fr": "Frantsesa",
+  "lang_it": "Italiera",
+  "lang_pt": "Portugesa",
+  "lang_ru": "Errusiera",
+  "lang_ja": "Japoniera",
+  "lang_eu": "Euskara",
 
   "Continue": "Jarraitu",
 
@@ -104,5 +104,6 @@
 
   "New Game": "Partida berria",
   "Import Game": "Inportatu partida",
-  "What language do you want to learn?": "Zein hizkuntza ikasi nahi duzu?"
+  "What language do you want to learn?": "Zein hizkuntza ikasi nahi duzu?",
+  "What language do you already speak?": "Zein hizkuntza hitz egiten duzu jada?"
 }

@@ -1,14 +1,14 @@
 {
-  "Esperanto": "Esperanto",
-  "English": "Englisch",
-  "Spanish": "Spanisch",
-  "German": "Deutsch",
-  "French": "Französisch",
-  "Italian": "Italienisch",
-  "Portuguese": "Portugiesisch",
-  "Russian": "Russisch",
-  "Japanese": "Japanisch",
-  "Basque": "Baskisch",
+  "lang_eo": "Esperanto",
+  "lang_en": "Englisch",
+  "lang_es": "Spanisch",
+  "lang_de": "Deutsch",
+  "lang_fr": "Französisch",
+  "lang_it": "Italienisch",
+  "lang_pt": "Portugiesisch",
+  "lang_ru": "Russisch",
+  "lang_ja": "Japanisch",
+  "lang_eu": "Baskisch",
 
   "Continue": "Weiter",
 
@@ -104,5 +104,6 @@
 
   "New Game": "Neues Spiel",
   "Import Game": "Spiel importieren",
-  "What language do you want to learn?": "Welche Sprache möchtest Du lernen?"
+  "What language do you want to learn?": "Welche Sprache möchtest Du lernen?",
+  "What language do you already speak?": "Welche Sprache sprichst Du bereits?"
 }

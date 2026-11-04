@@ -30,7 +30,7 @@ declare type Payload = { uid: string } & (
     }
   | {
       cmd: "lang";
-      lang: "LANG1" | "LANG2";
+      lang: string; // "<learn>-<known>"
     }
   | {
       cmd: "skill-up";
@@ -113,7 +113,7 @@ declare interface MonsterUpdateResult {
 
 declare interface Backup {
   version: number;
-  lang: string;
+  vol: number;
   monsters: Monster[];
   session: string;
   unseenIndex: string;
