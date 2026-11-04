@@ -26,7 +26,10 @@ export default function CreditsModal(props: Props) {
           <p>{_("Sound effects by celestialghost8, Fupi and Dizzy Crow")}</p>
           <p>{_("Translators: adb, sbkaf, mikelgs")}</p>
           <p>
-            <a target="_blank" href="https://github.com/ArcaneCircle/babel-dungeon">
+            <a
+              target="_blank"
+              href="https://github.com/ArcaneCircle/babel-dungeon"
+            >
               {_("Learn more...")}
             </a>
           </p>
