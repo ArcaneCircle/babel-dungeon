@@ -1,4 +1,3 @@
-import { LANG1_CODE, LANG2_CODE } from "~/lib/constants";
 import { _ } from "~/lib/i18n";
 
 import ConfirmModal from "./ConfirmModal";
@@ -8,7 +7,6 @@ type Props = {
 };
 
 export default function CreditsModal(props: Props) {
-  const BASE_URL = "https://github.com/ArcaneCircle/babel-dungeon";
   return (
     <ConfirmModal {...props}>
       <div className="selectable" style={{ textAlign: "center" }} tabIndex={1}>
@@ -28,7 +26,7 @@ export default function CreditsModal(props: Props) {
           <p>{_("Sound effects by celestialghost8, Fupi and Dizzy Crow")}</p>
           <p>{_("Translators: adb, sbkaf, mikelgs")}</p>
           <p>
-            <a target="_blank" href={`${BASE_URL}-${LANG1_CODE}-${LANG2_CODE}`}>
+            <a target="_blank" href="https://github.com/ArcaneCircle/babel-dungeon">
               {_("Learn more...")}
             </a>
           </p>

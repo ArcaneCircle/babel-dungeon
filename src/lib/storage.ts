@@ -1,7 +1,7 @@
 import Dexie, { type EntityTable } from "dexie";
 
-import { LANG1_CODE, LANG2_CODE } from "~/lib/constants";
-import { SENTENCES } from "~/lib/sentences";
+import { LANGUAGES } from "~/lib/constants";
+import { SENTENCES, initializeSentences } from "~/lib/sentences";
 import { applyPixelFont } from "~/lib/theme";
 
 const VERSION = 5;
@@ -13,13 +13,15 @@ export const db = new Dexie("gamedb") as Dexie & {
 };
 db.version(1).stores({ monsters: "id, streak, due" });
 
-const BACKUP_CODE = `${LANG1_CODE}-${LANG2_CODE}`;
+// Volume of the game content (sentences). Backups from other volumes only
+// restore player progress and settings, never sentence-related data.
+const VOLUME = 1;
 
 export async function exportBackup(): Promise<Backup> {
   const monsters = await db.monsters.toArray();
   return {
     version: VERSION,
-    lang: BACKUP_CODE,
+    vol: VOLUME,
     monsters,
     session: localStorage.session,
     unseenIndex: localStorage.unseenIndex,
@@ -44,7 +46,7 @@ export async function exportBackup(): Promise<Backup> {
     sfx: localStorage.sfx,
     tts: localStorage.tts,
     pixelFont: localStorage.pixelFont,
-    learningLanguage: localStorage.learningLanguage,
+    learningLanguage: getLearningLanguage(),
   };
 }
 
@@ -63,11 +65,15 @@ export async function importBackup(backup: Backup) {
     }
   }
 
-  await db.monsters.bulkPut(
-    backup.monsters.filter((mon) => mon.id < SENTENCES.length),
-  );
-  localStorage.session = backup.session || "";
-  localStorage.unseenIndex = backup.unseenIndex;
+  await initializeSentences(backup.learningLanguage);
+  localStorage.learningLanguage = backup.learningLanguage;
+  if (backup.vol === VOLUME) {
+    await db.monsters.bulkPut(
+      backup.monsters.filter((mon) => mon.id < SENTENCES.length),
+    );
+    localStorage.session = backup.session || "";
+    localStorage.unseenIndex = backup.unseenIndex;
+  }
   // Player
   localStorage.streak = backup.streak;
   localStorage.level = backup.level;
@@ -90,12 +96,16 @@ export async function importBackup(backup: Backup) {
   localStorage.tts = backup.tts || "";
   localStorage.pixelFont = backup.pixelFont || "";
   applyPixelFont(getPixelFontEnabled());
-  localStorage.learningLanguage = backup.learningLanguage || "LANG1";
+}
+
+function isAvailableLanguage(lang: string): boolean {
+  const [learn, known] = lang.split("-");
+  return !!LANGUAGES[learn] && LANGUAGES[learn].indexOf(known) !== -1;
 }
 
 export function isValidBackup(backup: Backup): boolean {
   return (
-    backup.lang === BACKUP_CODE &&
+    isAvailableLanguage(backup.learningLanguage) &&
     backup.version <= VERSION &&
     backup.version > 2
   );

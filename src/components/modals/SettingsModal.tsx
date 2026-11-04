@@ -59,7 +59,7 @@ export default function SettingsModal({ onShowCredits, ...props }: Props) {
     const backup = await exportBackup();
     window.webxdc.sendToChat({
       file: {
-        name: `babel-dungeon.${backup.lang}.bak`,
+        name: `babel-dungeon.vol${backup.vol}.bak`,
         plainText: JSON.stringify(backup),
       },
     });
