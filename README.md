@@ -59,15 +59,6 @@ NODE_ENV=debug pnpm build
 
 The resulting optimized `.xdc` file is saved in `dist-xdc/` folder.
 
-### Releasing
-
-To automatically build and create a new GitHub release with the `.xdc` file:
-
-```
-git tag -a v1.0.1
-git push origin v1.0.1
-```
-
 ### Credits
 
 - The sentences were extracted from the [Tatoeba](https://tatoeba.org/en/downloads) collection (licensed under CC-BY 2.0).
