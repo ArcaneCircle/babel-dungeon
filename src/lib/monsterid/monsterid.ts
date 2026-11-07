@@ -10,6 +10,13 @@ const BASE_TEXTURE_SRC = "/base.png";
 const PARTS_TEXTURE_SRC = "/parts.png";
 const EMPTY_IMAGE = "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
 
+const FULL_HEAD_FACES = new Set([16, 20]);
+const FULL_BODY_HEADS = new Set([6, 7, 10, 13, 14, 15, 17, 18, 23, 24, 25, 26]);
+const FULL_FACE_HEADS = new Set([35, 36]);
+const GREEN_CAPE_FACE = 22;
+const NO_HEAD = 0;
+const NO_FACE = 0;
+
 interface ShapeOption {
   key: string;
   sheetRow: number;
@@ -154,6 +161,16 @@ function createAppearance(seed: string): Record<string, number> {
   COLOR_THEMES.forEach(({ key, options }) => {
     appearance[key] = Math.floor(rng() * options.length);
   });
+
+  if (
+    FULL_FACE_HEADS.has(appearance.head) ||
+    (FULL_BODY_HEADS.has(appearance.head) &&
+      appearance.face === GREEN_CAPE_FACE)
+  ) {
+    appearance.face = NO_FACE;
+  } else if (FULL_HEAD_FACES.has(appearance.face)) {
+    appearance.head = NO_HEAD;
+  }
 
   return appearance;
 }
