@@ -29,7 +29,7 @@ export function tts(text: string) {
     } else {
       msg.lang = getLearningLanguage().split("-")[0];
     }
-    window.speechSynthesis.cancel();
+    window.speechSynthesis.cancel?.();
     window.speechSynthesis.speak(msg);
   } catch (e) {
     console.log(e);
