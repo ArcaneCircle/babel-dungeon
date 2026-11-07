@@ -1,12 +1,6 @@
 import { getLearningLanguage } from "~/lib/storage";
 
-let voice = getVoice();
-
-function getVoice() {
-  const llang = getLearningLanguage();
-  if (!llang) return null;
-  const lang = llang.split("-")[0];
-
+function getVoice(lang: string) {
   try {
     const voices = window.speechSynthesis.getVoices();
     return (
@@ -21,15 +15,15 @@ function getVoice() {
 
 export function tts(text: string) {
   try {
-    if (!voice) voice = getVoice();
+    const lang = getLearningLanguage().split("-")[0];
+    const voice = getVoice(lang);
     const msg = new SpeechSynthesisUtterance();
     msg.text = text;
+    msg.lang = lang;
     if (voice) {
       msg.voice = voice;
-    } else {
-      msg.lang = getLearningLanguage().split("-")[0];
     }
-    window.speechSynthesis.cancel();
+    window.speechSynthesis.cancel?.();
     window.speechSynthesis.speak(msg);
   } catch (e) {
     console.log(e);
