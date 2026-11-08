@@ -10,10 +10,12 @@ const BASE_TEXTURE_SRC = "/base.png";
 const PARTS_TEXTURE_SRC = "/parts.png";
 const EMPTY_IMAGE = "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
 
+const BODY_COVER_HEADS = new Set([
+  6, 7, 10, 13, 14, 15, 17, 18, 23, 24, 25, 26,
+]);
+const BODY_COVER_FACES = new Set([6, 7, 22]);
 const FULL_HEAD_FACES = new Set([16, 20]);
-const FULL_BODY_HEADS = new Set([6, 7, 10, 13, 14, 15, 17, 18, 23, 24, 25, 26]);
 const FULL_FACE_HEADS = new Set([35, 36]);
-const GREEN_CAPE_FACE = 22;
 const NO_HEAD = 0;
 const NO_FACE = 0;
 
@@ -164,8 +166,8 @@ function createAppearance(seed: string): Record<string, number> {
 
   if (
     FULL_FACE_HEADS.has(appearance.head) ||
-    (FULL_BODY_HEADS.has(appearance.head) &&
-      appearance.face === GREEN_CAPE_FACE)
+    (BODY_COVER_HEADS.has(appearance.head) &&
+      BODY_COVER_FACES.has(appearance.face))
   ) {
     appearance.face = NO_FACE;
   } else if (FULL_HEAD_FACES.has(appearance.face)) {
